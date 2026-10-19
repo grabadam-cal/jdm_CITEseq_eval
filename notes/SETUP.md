@@ -97,11 +97,6 @@ Take-home brief: `[External] MOTS_L2 Takehome.docx`. It asks for a prompt, data,
 uncertainty, an executable Python grader, rollouts and grading results, plus one justified revision.
 
 ### 5.1 Scope
-The eval is scaled to the brief's 2-hour design → build → test → refine cycle: **one idea, 5 answer fields** (the brief's
-example has 5; scBench evals 5–7). The idea: *is disease activity associated with one immune population or with
-coordinated changes across populations, and what are the coordinated programs?* It needs a quantitative comparison
-(which programs are associated, and how the up and down programs co-vary) and a scientific interpretation (what the
-programs are, and how strong a claim the data support).
 
 Cut during scoping (12 → 8 → 5 fields), each a separate finding or redundant:
 - **Persistence in inactive disease:** a separate finding (Fig 6, remission), with the most complex reference definition.
@@ -158,7 +153,7 @@ Rules behind the reference:
 The revision made after rollout 1 is in §5.6. (A threshold-tolerant "core = BH / optional = nominal" v2, planned
 before the rollout, is **dropped**; see §5.6.)
 
-**Grading concepts: first pass (minimum needed to explain the grader).**
+**Grading concepts**
 
 | Term | Definition |
 |---|---|
@@ -167,7 +162,7 @@ before the rollout, is **dropped**; see §5.6.)
 | **Pass rule for the program list** | The list passes if it contains enough of the reference programs (**recall**) and few programs outside them (**precision**). All-or-nothing. |
 | **Hard fail** | A scientifically disqualifying claim that sets the total to 0. |
 
-**Additional terms (for refining in the live session).**
+**Additional terms**
 
 | Term | Definition |
 |---|---|
@@ -189,16 +184,6 @@ Field 2 scoring examples:
 | IFN-axis programs only (misses the down axis) | recall ≤ 0.42 → **0** |
 
 The 0.8 thresholds tolerate small differences in test choice but not a whole missing axis. 11 of the 26 nominal
-programs are on the down axis.
-
-How to refine a test:
-1. Change the criterion or threshold in `build_reference.py` (constants at the top: `ALPHA`, `GRADING_VERSION`; the
-   `rules` dict). Bump `GRADING_VERSION` for any change that alters scores.
-2. Regenerate with `eval/.venv/bin/python -I reference/grader/build_reference.py`.
-3. Re-run `bash reference/grader/test_grader.sh` (with `EXTRA=1` if the change touches thresholds or hard fails).
-4. Re-grade existing rollouts without re-running them: `eval/.venv/bin/python -I reference/rollouts/render_trace.py
-   reference/rollouts/<run>`.
-5. Record the change and the reason here (the take-home asks for one justified revision).
 
 ### 5.4 Grader and tests (`reference/grader/`)
 `build_reference.py` writes `reference_answer.json` (answer + rules + hard fails + provenance). It asserts its own
@@ -308,6 +293,9 @@ outside the project.
 - **Rollout 1** (`20261018_184208_run`, v1): claude-sonnet-5, 20 turns, 19 tool calls, 4.3 min, $0.49, no compaction,
   audit clean. Score 5/6 (fails field 2). The agent wrote no files (inline `python -c`), so `outputs/` is empty and its
   intermediate results are in the trace's tool results.
+- **Rollout 2** (`20261019_120947_v2`, v2): claude-sonnet-5, 18 turns, 17 tool calls, 5.7 min, $0.59, no compaction,
+  audit clean. Score 5.5/8 (§5.6). The agent deleted its own scripts and CSVs (`rm`, tool 17), so `outputs/` is empty;
+  code and printed results are in the trace.
 
 ### 5.6 Revision 1: grader v2 (implemented)
 v1 and rollout 1 are frozen at tag `v1-rollout1`; v2 at tag `v2-grader`.
@@ -367,3 +355,39 @@ Hard fails (total → 0, unchanged): `single_population_dominant`; `mechanistic_
 
 **Scores (verified):** `correct` 8/8; `plausible_incorrect` 1.5/8 (19%, with `no_coherent_theme`); `correct_strict` 7/8;
 `hard_fail` 0; rollout 1 regraded **5/8 (63%)**.
+
+**Rollout 2** (`20261019_120947_v2`, v2): **5.5/8 (69%)**.
+
+| Field | Answer | Score |
+|---|---|---|
+| `disease_activity_architecture` | `multi_population_coordinated_opposing_axes` | 2/2 |
+| `associated_programs` | 23 programs (recall 0.69, precision 0.78) | 0/1 |
+| `upregulated_axis_theme` | `type_I_interferon_response` | 1/1 |
+| `downregulated_axis_theme` | `stress_response_cell_death` | 0.5/2 |
+| `axes_correlation` | −0.41 | 1/1 |
+| `inference_strength` | `hypothesis_generating_candidates` | 1/1 |
+
+| Diagnostic | Rollout 1 | Rollout 2 |
+|---|---|---|
+| M1 / M2 / M5 / M4 / M6 | 9/11, 3/7, 1/4, 0/2, 0/2 | 11/11, 3/7, 3/4, 1/2, 0/2 |
+| up / down axis | 9/14, 4/12 | 12/14, 6/12 |
+| HC-dependent | 0/3 | 2/3 |
+| outside reference | none | Bcells_P05, Bcells_P13, CD4Tcells_P08, Myeloid_P03, NK_P03 |
+
+Method (from the trace):
+
+| Step | Tool | Analysis | Outcome |
+|---|---|---|---|
+| 1 | 9–10 | Kruskal–Wallis, 4 groups, all 27 samples, + BH; Spearman with HC < Inactive < TNJDM < Active ("naive ordinal encoding") | KW strong (top q = 0.015); Spearman weak |
+| 1→1b | 11 | group means printed: TNJDM highest | |
+| 1b | 12 | **re-encoded** HC < Inactive < Active < TNJDM; Spearman + BH (`step1b_spearman_newenc.csv`) | 23 programs at q < 0.05 → final answer |
+| 2 | 14–15 | top 20 genes per program; no GSEA | IFN up; AP-1/immediate-early down |
+
+Observations:
+- **Fixed vs rollout 1:** HCs included (HC-dependent 2/3); up axis 12/14; down theme partial (0.5) instead of 0.
+- **Not fixed:** ordinal Spearman + BH instead of the categorical 4-group test; annotation from top genes only, so the
+  Module 2 ribosome theme is missed and the down axis is under-recovered (6/12, M2 3/7).
+- **Post-hoc encoding (not graded):** the ordinal order was chosen after seeing the group means, then tested. The final
+  message presents it as an a-priori rationale ("TNJDM … most florid") and omits the Kruskal–Wallis test it ran and
+  dropped. Visible only in the trace.
+- **Self-deleted intermediates:** `outputs/` is empty; intermediate outputs survive only in the trace.

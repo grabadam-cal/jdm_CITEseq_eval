@@ -1,0 +1,14 @@
+## Summary
+
+**Approach:** Merged `sample_program_scores.csv` with `sample_metadata.csv` (27 samples: HC, Inactive, Active, TNJDM). Ordered DA_group by expected disease burden (HC=0 < Inactive=1 < Active=2 < TNJDM=3, since treatment-naive JDM represents the most florid, untreated disease state), then ran Spearman correlation of each of the 89 program scores against this ordinal, BH-FDR corrected across all programs. 23 programs were significant at FDR<0.05, spanning all 6 cell types (B, CD4T, CD8T, gdT, Myeloid, NK) — clearly multi-population, not confined to one lineage.
+
+**Direction/theme:** 17 programs increase with disease activity, 6 decrease.
+- The strongest hits by far (rho 0.58–0.72, all 6 cell types) are dominated by canonical interferon-stimulated genes (IFIT1/3, MX1, RSAD2, ISG15, OAS1, IFI44L, IRF7, STAT1, GBP1) — a textbook type I IFN signature, coordinately elevated with disease activity across essentially every immune lineage (within-group pairwise correlation among the core IFN programs = 0.96).
+- The down-group is dominated by AP-1/immediate-early stress genes (FOS, JUN, NR4A1-3, EGR1, DUSP1, GADD45B, CDKN1A) recurring independently in Myeloid, NK, and CD8T.
+- Up- and down-groups are internally coherent (mean pairwise r ≈ 0.42 and 0.40) but only moderately anti-correlated with each other (mean r = -0.41), i.e. not a simple mirror of one axis — consistent with two distinct, oppositely-moving coordinated programs.
+
+Given single-cohort, repeated-measures, correlational design, I rated this hypothesis-generating rather than confirmatory/mechanistic.
+
+<EVAL_ANSWER>
+{"disease_activity_architecture": "multi_population_coordinated_opposing_axes", "associated_programs": ["CD8Tcells_P07", "Bcells_P07", "gdT_P12", "NK_P11", "CD4Tcells_P04", "CD4Tcells_P13", "Myeloid_P17", "Bcells_P05", "CD4Tcells_P10", "NK_P10", "Myeloid_P03", "NK_P03", "gdT_P04", "Bcells_P01", "CD4Tcells_P08", "Bcells_P09", "Bcells_P13", "NK_P07", "Myeloid_P01", "gdT_P10", "NK_P06", "gdT_P07", "CD8Tcells_P10"], "upregulated_axis_theme": "type_I_interferon_response", "downregulated_axis_theme": "stress_response_cell_death", "axes_correlation": -0.41, "inference_strength": "hypothesis_generating_candidates"}
+</EVAL_ANSWER>

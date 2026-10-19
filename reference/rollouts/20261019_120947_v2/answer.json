@@ -1,0 +1,32 @@
+{
+  "disease_activity_architecture": "multi_population_coordinated_opposing_axes",
+  "associated_programs": [
+    "CD8Tcells_P07",
+    "Bcells_P07",
+    "gdT_P12",
+    "NK_P11",
+    "CD4Tcells_P04",
+    "CD4Tcells_P13",
+    "Myeloid_P17",
+    "Bcells_P05",
+    "CD4Tcells_P10",
+    "NK_P10",
+    "Myeloid_P03",
+    "NK_P03",
+    "gdT_P04",
+    "Bcells_P01",
+    "CD4Tcells_P08",
+    "Bcells_P09",
+    "Bcells_P13",
+    "NK_P07",
+    "Myeloid_P01",
+    "gdT_P10",
+    "NK_P06",
+    "gdT_P07",
+    "CD8Tcells_P10"
+  ],
+  "upregulated_axis_theme": "type_I_interferon_response",
+  "downregulated_axis_theme": "stress_response_cell_death",
+  "axes_correlation": -0.41,
+  "inference_strength": "hypothesis_generating_candidates"
+}
