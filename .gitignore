@@ -12,3 +12,4 @@ JCI_data/*
 eval/data/*.csv
 # agent session transcripts hold Claude Code session context (user email, git status); kept local only
 reference/rollouts/*/session_transcript.jsonl
+__pycache__/
