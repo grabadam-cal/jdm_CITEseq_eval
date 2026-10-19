@@ -25,7 +25,7 @@ import grade as grader  # noqa: E402
 MAX_RESULT_CHARS = 4000
 # anything an eval agent should never touch: paper, published results, reference answers, this repo's notes,
 # the paper's code, and Claude Code transcripts/memory (which contain the design discussion)
-FORBIDDEN = [r"JCI_data", r"reference/", r"SETUP\.md", r"Takehome", r"Rabadam", r"jci\.insight", r"176963",
+FORBIDDEN = [r"JCI_data", r"reference/", r"SETUP\.md", r"notes/", r"post_mortem", r"Takehome", r"Rabadam", r"jci\.insight", r"176963",
              r"DECIPHER", r"grabadam", r"\.claude/projects", r"eval_id_map", r"reference_answer",
              r"LatchBio_Assessment_2026/(?!eval)", r"(^|[\s'\"=])\.\.(/|\s|$)", r"\.git\b", r"(^|[\s;&|('\"])git\s"]
 

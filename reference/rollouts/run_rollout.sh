@@ -89,7 +89,7 @@ cp "$EVAL/task.txt" "$EVAL/eval_answer.json" "$EVAL/README.md" "$EVAL/data/vocab
 cp "$REF" "$RUN/snapshot/grader/reference_answer.json"
 cp "$ROOT/reference/grader/grade.py" "$ROOT/reference/grader/build_reference.py" "$RUN/snapshot/grader/"
 
-# git: GIT_CEILING_DIRECTORIES (below) stops git in eval/ from finding the project repo (history holds SETUP.md
+# git: GIT_CEILING_DIRECTORIES (below) stops git in eval/ from finding the project repo (history holds notes/SETUP.md
 # and every reference answer); .git/ is also denied and any git command is flagged in audit.txt.
 # deny rules (Read/Edit/Write) for everything outside eval/ that could leak answers; kept here, not in eval/,
 # so the agent can't read the list of where the answers are. Bash is not covered -> audit.txt is the backstop.

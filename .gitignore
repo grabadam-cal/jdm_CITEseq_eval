@@ -6,7 +6,7 @@ reference/smoke/out/
 .Rhistory
 *.docx
 reference/rollouts/.lock
-# data is not part of the repo (see SETUP.md §1); the paper is
+# data is not part of the repo (see notes/SETUP.md §1); the paper is
 JCI_data/*
 !JCI_data/Rabadam_JCI_2024.pdf
 eval/data/*.csv

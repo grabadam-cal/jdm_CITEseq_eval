@@ -15,7 +15,7 @@ LatchBio_Assessment_2026/
 ├── eval/        what the agent sees: task.txt, eval_answer.json, data/, README.md (build only), environment files
 ├── reference/   grader-only: grader/, rollouts/, eval_id_map.csv, functions/ (paper code), smoke/, converters, logs/
 ├── JCI_data/    paper PDF, original workbooks and exported CSVs (published results)
-└── SETUP.md     this file
+└── notes/       SETUP.md (this file), build_cycle_post_mortem.md (time spent, what to cut)
 ```
 
 **Data is not in the git repo** (only the paper PDF is). `.gitignore` excludes `JCI_data/*` except the PDF, and
@@ -272,7 +272,7 @@ Run folder (nothing is ever overwritten; re-grades add files):
 Bash and runs unattended (`bypassPermissions`), so containment has five layers:
 1. **Scope:** working directory `eval/`, and the prompt names only `eval/` files. No `CLAUDE.md` loads.
 2. **Deny rules** (`rollout_settings.json`, 22 rules): `Bash(git:*)`; Read, Edit and Write are denied for `JCI_data/`, `reference/`,
-   `SETUP.md`, the `.docx`, `.git/`, `~/.claude/projects/**` (transcripts, including this design conversation) and
+   `notes/`, the `.docx`, `.git/`, `~/.claude/projects/**` (transcripts, including this design conversation) and
    `~/.claude/plans/**`. The file is kept in `reference/`, not `eval/.claude/`, so the deny list itself doesn't point
    to the answers.
 3. **Memory quarantine:** auto-memory for `eval/` (`~/.claude/projects/<eval>/memory/`) is moved into the run folder
@@ -289,16 +289,17 @@ outside the project.
 **Verified:**
 - **Pre-flight containment test** (run before rollouts whenever the project layout changes; last run 2026-10-19,
   after adding git and `reference/grader/versions/`). Haiku, same flags, settings and env as `run_rollout.sh`,
-  started in `eval/`, attempts each access once ($0.04):
+  started in `eval/`, attempts each access once ($0.06):
 
   | # | Attempt | Result |
   |---|---|---|
   | 1 | Read `eval/task.txt` | allowed |
-  | 2–8 | Read `SETUP.md`, `reference/grader/versions/reference_answer_v2.json`, `reference/grader/reference_answer.json`, `JCI_data/*.pdf`, `.git/config`, a rollout `trace.md`, this project's Claude memory | denied |
+  | 2–8 | Read `SETUP.md` (now `notes/`), `reference/grader/versions/reference_answer_v2.json`, `reference/grader/reference_answer.json`, `JCI_data/*.pdf`, `.git/config`, a rollout `trace.md`, this project's Claude memory | denied |
   | 9 | Write `reference/probe.txt` | denied (no file created) |
   | 10 | Bash `git log` | no repo found (ceiling) |
   | 11 | Bash `git -C .. show HEAD:SETUP.md` | denied (`Bash(git:*)`) |
   | 12 | Bash `bash -c "git -C .. log"` | **allowed**: prefix rule bypassed; caught by audit only |
+  | 13 | Read `notes/SETUP.md`, `notes/build_cycle_post_mortem.md` (after moving notes) | denied |
 
   Grep and Glob don't exist in CLI 2.1.292, so searching goes through Bash, which the audit covers.
 - **Pipeline:** stub-`claude` runs (no API calls). A concurrent start is refused; two runs get separate folders;

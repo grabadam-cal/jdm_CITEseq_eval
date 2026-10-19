@@ -3,7 +3,7 @@
 Usage (from the Assessment root):  eval/.venv/bin/python -I reference/grader/build_reference.py
 
 Inputs: JCI_data/ (sdval H, Fig7A, Fig5B, sdt3), eval/data/sample_metadata.csv, reference/eval_id_map.csv.
-Every reference value is derived here; see SETUP.md §5 for the rationale behind each rule.
+Every reference value is derived here; see notes/SETUP.md §5 for the rationale behind each rule.
 """
 import json
 from pathlib import Path
@@ -21,7 +21,7 @@ UP_MODULES, DOWN_MODULES = {1}, {2, 5}   # IFN hub (up); ribosome/translation + 
 # GO:BP terms that define the ribosome/translation theme (Module 2; Fig 5B, Fig 7C)
 RIBOSOME_RE = r"RIBOSOM|TRANSLATION|COTRANSLATIONAL|PROTEIN_TARGETING|PROTEIN_LOCALIZATION_TO_(?:MEMBRANE|ENDOPLASMIC)|NONSENSE_MEDIATED_DECAY"
 
-# Grading versions (SETUP.md §5.3, §5.6):
+# Grading versions (notes/SETUP.md §5.3, §5.6):
 #   "v1" = 5 fields (6 pts); associated_programs = exact nominal set.
 #   "v2" = revision 1: + downregulated_axis_theme (2 pts) and score-neutral associated_programs diagnostics.
 GRADING_VERSION = "v2"
@@ -102,7 +102,7 @@ def main():
         {"reason": "mechanistic/causal driver claimed from correlational, hypothesis-generating data",
          "when": [{"field": "inference_strength", "in": ["mechanistic_driver_identified"]}]},
     ]
-    # score-neutral diagnostics for associated_programs: recall on subsets of the reference set (SETUP.md §5.6)
+    # score-neutral diagnostics for associated_programs: recall on subsets of the reference set (notes/SETUP.md §5.6)
     by_module = {f"module_M{m}": ev(x for x in nominal if module.get(x) == m)
                  for m in sorted({module.get(x) for x in nominal})}
     diagnostics = {"associated_programs": {
