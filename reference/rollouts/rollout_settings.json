@@ -22,6 +22,7 @@
       "Read(/<project>/.git/**)",
       "Edit(/<project>/.git/**)",
       "Write(/<project>/.git/**)",
+      "Bash(git:*)",
       "Bash(git:*)"
     ]
   }
