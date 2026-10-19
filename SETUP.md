@@ -117,9 +117,9 @@ Cut during scoping (12 → 8 → 5 fields), each a separate finding or redundant
 ### 5.2 What the agent sees (`eval/`)
 - `task.txt`: your prompt (context, question, `<EVAL_ANSWER>` schema). It names input files only. There is no
   method, threshold or "hypothesis-generating" framing; the claim-strength judgment is graded instead.
-- `eval_answer.json`: the 5 keys with type placeholders.
-- `data/vocabulary.json`: three token lists (`disease_activity_architecture`, `upregulated_axis_theme`,
-  `inference_strength`), each with distractors, plus neutral `answer_conventions` for all 5 fields. `DA_group` labels
+- `eval_answer.json`: the answer keys (5 in v1, 6 in v2) with type placeholders.
+- `data/vocabulary.json`: token lists (`disease_activity_architecture`, `upregulated_axis_theme`, v2:
+  `downregulated_axis_theme`, `inference_strength`), each with distractors, plus neutral `answer_conventions` for every field. `DA_group` labels
   are used as-is, by design: they are clinically meaningful and are not expanded.
 - Wording: the data are *gene-expression programs*, while the question asks about *biological activity programs*.
   Bridging the two (functional annotation of `program_gene_scores_*`) is ungraded work the agent has to work out
@@ -127,18 +127,18 @@ Cut during scoping (12 → 8 → 5 fields), each a separate finding or redundant
 - Question: "associated with changes in a single immune cell population, or with coordinated changes across
   populations" ("driven by" was dropped as a causal claim).
 
-### 5.3 Answer fields, reference and scoring (5 fields, 6 points)
-Reference values are **generated** by `reference/grader/build_reference.py` from `JCI_data/` (H, Fig7A, sdt3),
+### 5.3 Answer fields, reference and scoring (v2: 6 fields, 8 points; v1: 5 fields, 6 points)
+Reference values are **generated** by `reference/grader/build_reference.py` from `JCI_data/` (H, Fig7A, Fig5B, sdt3),
 so they are reproducible. Program ids are eval ids (`reference/eval_id_map.csv`); module numbers are never used.
 
-`reference_answer.json` is current: generated with `GRADING_VERSION = "v1"` after the scope-down to 5 fields, and
-all tests pass (§5.4).
+`reference_answer.json` is current: `GRADING_VERSION = "v2"` (§5.6); all tests pass (§5.4). v1 is at tag `v1-rollout1`.
 
-| # | Field | Reference (v1) | Rule (pts) |
+| # | Field | Reference | Rule (pts) |
 |---|---|---|---|
 | 1 | `disease_activity_architecture` | `multi_population_coordinated_opposing_axes` | categorical (2); `…coordinated_single_axis` 1.0 pt, `multi_population_independent` 0.25 pt |
 | 2 | `associated_programs` | the 26 programs with nominal p < 0.05 (one-way ANOVA by DA_group, 73-node network) | set (1): recall ≥ 0.8, precision ≥ 0.8 against those 26 |
 | 3 | `upregulated_axis_theme` | `type_I_interferon_response` | categorical (1); `inflammatory_cytokine_signaling` 0.25 |
+| 3b | `downregulated_axis_theme` (v2) | `ribosome_translation_protein_targeting` | categorical (2); `stress_response_cell_death` 0.5 pt |
 | 4 | `axes_correlation` | −0.41 (mean Pearson r between up-axis and down-axis programs; within-IFN r̄ = 0.61) | numeric (1): ±0.20, must be negative; `null` scores 0 |
 | 5 | `inference_strength` | `hypothesis_generating_candidates` | categorical (1); `confirmatory_association` 0.25 |
 
@@ -163,7 +163,7 @@ before the rollout, is **dropped**; see §5.6.)
 | Term | Definition |
 |---|---|
 | **Reference answer** | The canonical value for each answer field, derived from the published data by `build_reference.py`. |
-| **Field test** | The rule that scores one field against the reference. Fields are scored independently and summed (6 points). |
+| **Field test** | The rule that scores one field against the reference. Fields are scored independently and summed (v2: 8 points). |
 | **Pass rule for the program list** | The list passes if it contains enough of the reference programs (**recall**) and few programs outside them (**precision**). All-or-nothing. |
 | **Hard fail** | A scientifically disqualifying claim that sets the total to 0. |
 
@@ -217,13 +217,12 @@ total = 0 if any hard fail else sum(scores)
 - **Brief test** (`bash reference/grader/test_grader.sh`): one correct and one plausible but scientifically incorrect
   answer. It asserts correct = 100% and plausible-incorrect < 50%.
 
-  | Test answer | What it represents | v1 score |
-  |---|---|---|
-  | `correct.txt` | **Correct.** Matches the paper's analysis: opposing-axes architecture; all 26 nominal programs; type I IFN up-axis; axes r = −0.38; `hypothesis_generating_candidates`. | 6/6 (100%) |
-  | `plausible_incorrect.txt` | **Plausible but scientifically incorrect: "one shared inflammatory signature".** Finds the IFN co-variation across cell types but treats it as a single axis, labels it from top genes instead of testing enrichment, misses the opposing down axis, and over-claims. Every claim is reasonable on its own, which is what makes it the hard negative. | 1.5/6 (25%) |
+  | Test answer | What it represents | v1 | v2 |
+  |---|---|---|---|
+  | `correct.txt` | **Correct.** Matches the paper's analysis: opposing-axes architecture; all 26 nominal programs; type I IFN up-axis; axes r = −0.38; `hypothesis_generating_candidates`; v2: ribosome/translation down-axis. | 6/6 | 8/8 (100%) |
+  | `plausible_incorrect.txt` | **Plausible but scientifically incorrect: "one shared inflammatory signature".** Finds the IFN co-variation across cell types but treats it as a single axis, labels it from top genes instead of testing enrichment, misses the opposing down axis, and over-claims. Every claim is reasonable on its own, which is what makes it the hard negative. v2: down axis `no_coherent_theme`. | 1.5/6 (25%) | 1.5/8 (19%) |
 
-  Result: **PASS**. The grader distinguishes them (100% vs 25%). The extra tests also match: `correct_strict` 5/6
-  under v1, `hard_fail` 0/6.
+  Result: **PASS** under v1 and v2 (v2: 100% vs 19%). Extra tests also match.
 
   Field by field for `plausible_incorrect`:
 
@@ -232,16 +231,17 @@ total = 0 if any hard fail else sum(scores)
   | `disease_activity_architecture` | `multi_population_coordinated_single_axis`: sees the IFN co-variation across cell types but misses the opposing axis | 1/2 |
   | `associated_programs` | 9 IFN-axis programs + 3 non-associated (Myeloid_P02, CD4Tcells_P05, Bcells_P03); no down-axis programs | 0/1 |
   | `upregulated_axis_theme` | `inflammatory_cytokine_signaling`: labelled from top-loading genes, without enrichment | 0.25/1 |
+  | `downregulated_axis_theme` (v2) | `no_coherent_theme`: top genes only, no enrichment or module aggregation | 0/2 |
   | `axes_correlation` | −0.05: never tests how the up and down programs relate | 0/1 |
   | `inference_strength` | `confirmatory_association`: over-claims from 27 samples | 0.25/1 |
 
 - **Extra tests** (`reference/grader/extra_tests/`, run with `EXTRA=1 bash reference/grader/test_grader.sh`). These
   check grading assumptions:
 
-  | Test answer | What it checks | v1 |
-  |---|---|---|
-  | `correct_strict.txt` | BH on top of a hypothesis-generating screen: the 15 BH programs only, axes r = −0.52; otherwise as `correct`. Penalized on field 2 **by design** (§4: no cross-program BH). | 5/6 |
-  | `hard_fail.txt` | `correct` plus disqualifying claims (`single_population_dominant`; `mechanistic_driver_identified`). Hard fails override field credit. | 0/6 |
+  | Test answer | What it checks | v1 | v2 |
+  |---|---|---|---|
+  | `correct_strict.txt` | BH on top of a hypothesis-generating screen: the 15 BH programs only, axes r = −0.52; otherwise as `correct`. Penalized on field 2 **by design** (§4: no cross-program BH). | 5/6 | 7/8 |
+  | `hard_fail.txt` | `correct` plus disqualifying claims (`single_population_dominant`; `mechanistic_driver_identified`). Hard fails override field credit. | 0/6 | 0/8 |
 
 ### 5.5 Rollouts (`reference/rollouts/`)
 ```bash
@@ -292,8 +292,8 @@ outside the project.
   audit clean. Score 5/6 (fails field 2). The agent wrote no files (inline `python -c`), so `outputs/` is empty and its
   intermediate results are in the trace's tool results.
 
-### 5.6 Revision 1: grader v2 (spec; not implemented)
-v1 and rollout 1 are frozen at tag `v1-rollout1`.
+### 5.6 Revision 1: grader v2 (implemented)
+v1 and rollout 1 are frozen at tag `v1-rollout1`; v2 at tag `v2-grader`.
 
 **Observations (rollout 1, v1 score 5/6).**
 | Error | Evidence | Caught by v1? |
@@ -348,5 +348,5 @@ Hard fails (total → 0, unchanged): `single_population_dominant`; `mechanistic_
 | HC-dependent | CD4Tcells_P10, P13, P17 (3): 4-group p ≤ 0.044, patients-only p ≥ 0.12 | HC exclusion (reported, not scored: 3 borderline programs) | 0/3 |
 | extra programs | agent programs outside the 26, listed | false positives (precision side) | none |
 
-**Expected scores:** `correct` 8/8; `plausible_incorrect` 1.5/8 (19%, with `no_coherent_theme`); `correct_strict` 7/8;
+**Scores (verified):** `correct` 8/8; `plausible_incorrect` 1.5/8 (19%, with `no_coherent_theme`); `correct_strict` 7/8;
 `hard_fail` 0; rollout 1 regraded **5/8 (63%)**.

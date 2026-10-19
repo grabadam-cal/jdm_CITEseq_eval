@@ -1,7 +1,7 @@
 {
-  "total": 5.0,
-  "max": 6.0,
-  "fraction": 0.8333,
+  "total": 7.0,
+  "max": 8.0,
+  "fraction": 0.875,
   "hard_fail": [],
   "unexpected_fields": [],
   "fields": {
@@ -39,6 +39,12 @@
       "note": "match",
       "given": "type_I_interferon_response"
     },
+    "downregulated_axis_theme": {
+      "score": 2.0,
+      "max": 2.0,
+      "note": "match",
+      "given": "ribosome_translation_protein_targeting"
+    },
     "axes_correlation": {
       "score": 1.0,
       "max": 1.0,
@@ -50,6 +56,75 @@
       "max": 1.0,
       "note": "match",
       "given": "hypothesis_generating_candidates"
+    }
+  },
+  "diagnostics": {
+    "associated_programs": {
+      "module_M1": {
+        "recall": "9/11",
+        "missed": [
+          "CD4Tcells_P10",
+          "CD4Tcells_P13"
+        ]
+      },
+      "module_M2": {
+        "recall": "5/7",
+        "missed": [
+          "Myeloid_P10",
+          "gdT_P10"
+        ]
+      },
+      "module_M4": {
+        "recall": "0/2",
+        "missed": [
+          "Bcells_P01",
+          "gdT_P03"
+        ]
+      },
+      "module_M5": {
+        "recall": "1/4",
+        "missed": [
+          "CD8Tcells_P10",
+          "NK_P06",
+          "gdT_P13"
+        ]
+      },
+      "module_M6": {
+        "recall": "0/2",
+        "missed": [
+          "Bcells_P02",
+          "gdT_P09"
+        ]
+      },
+      "up_axis": {
+        "recall": "9/14",
+        "missed": [
+          "Bcells_P01",
+          "CD4Tcells_P10",
+          "CD4Tcells_P13",
+          "gdT_P03",
+          "gdT_P09"
+        ]
+      },
+      "down_axis": {
+        "recall": "6/12",
+        "missed": [
+          "Bcells_P02",
+          "CD8Tcells_P10",
+          "Myeloid_P10",
+          "NK_P06",
+          "gdT_P10",
+          "gdT_P13"
+        ]
+      },
+      "hc_dependent": {
+        "recall": "1/3",
+        "missed": [
+          "CD4Tcells_P10",
+          "CD4Tcells_P13"
+        ]
+      },
+      "outside_reference": []
     }
   }
 }

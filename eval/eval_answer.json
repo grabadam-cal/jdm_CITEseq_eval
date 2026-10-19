@@ -7,6 +7,7 @@
       "..."
     ],
     "upregulated_axis_theme": "<token>",
+    "downregulated_axis_theme": "<token>",
     "axes_correlation": "<number or null>",
     "inference_strength": "<token>"
   }

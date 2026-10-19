@@ -15,6 +15,19 @@
     "ribosome_translation_protein_targeting",
     "cell_cycle_proliferation",
     "oxidative_phosphorylation_metabolism",
+    "stress_response_cell_death",
+    "antigen_presentation_MHC",
+    "cytotoxicity_effector_function",
+    "no_coherent_theme",
+    "cannot_assess"
+  ],
+  "downregulated_axis_theme_vocabulary": [
+    "type_I_interferon_response",
+    "inflammatory_cytokine_signaling",
+    "ribosome_translation_protein_targeting",
+    "cell_cycle_proliferation",
+    "oxidative_phosphorylation_metabolism",
+    "stress_response_cell_death",
     "antigen_presentation_MHC",
     "cytotoxicity_effector_function",
     "no_coherent_theme",
@@ -31,6 +44,7 @@
     "disease_activity_architecture": "Exactly one token describing how programs associated with disease activity (DA_group) are distributed across cell types, based on your analysis. `single_population_dominant` = association concentrated in one cell type; `multi_population_independent` = associated programs in several cell types that do not co-vary across samples; `multi_population_coordinated_single_axis` = associated programs in several cell types that co-vary along one shared direction; `multi_population_coordinated_opposing_axes` = associated programs in several cell types forming two or more co-varying groups that move in opposite directions with disease activity; `no_association_detected` = no program is associated; `cannot_assess` = no usable result.",
     "associated_programs": "List of program ids (column names of sample_program_scores.csv) whose sample-level scores are significantly associated with DA_group in your analysis.",
     "upregulated_axis_theme": "Exactly one token: the biological theme of the associated programs whose scores are higher with disease activity. `no_coherent_theme` = these programs share no biological theme.",
+    "downregulated_axis_theme": "Exactly one token: the biological theme of the associated programs whose scores are lower with disease activity. `no_coherent_theme` = these programs share no biological theme.",
     "axes_correlation": "Number: mean pairwise Pearson correlation across samples between programs in your up-regulated group and programs in your down-regulated group (2 decimals). Use null if you found only one direction of change.",
     "inference_strength": "Exactly one token for the strongest claim your evidence supports. `mechanistic_driver_identified` = the data establish which population or program causes disease activity; `confirmatory_association` = the associations are established and do not need independent replication; `hypothesis_generating_candidates` = candidate associations suitable for prioritising follow-up or validation; `no_robust_association` = no association survives your analysis; `cannot_assess` = no usable result."
   }

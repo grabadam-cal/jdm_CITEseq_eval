@@ -1,0 +1,136 @@
+{
+  "grading_version": "v2",
+  "graded_at": "20261019_114855",
+  "reference": "<project>/reference/grader/reference_answer.json",
+  "reference_sha256": "e397c916904d5d88363d8b8fa6e05f9c2bb846425a9580aa6c631ad4e6dba8c2",
+  "total": 5.0,
+  "max": 8.0,
+  "fraction": 0.625,
+  "hard_fail": [],
+  "unexpected_fields": [],
+  "fields": {
+    "disease_activity_architecture": {
+      "score": 2.0,
+      "max": 2.0,
+      "note": "match",
+      "given": "multi_population_coordinated_opposing_axes"
+    },
+    "associated_programs": {
+      "score": 0.0,
+      "max": 1.0,
+      "note": "core_recall=0.50 precision=1.00 n=13",
+      "given": [
+        "Bcells_P07",
+        "Bcells_P09",
+        "Bcells_P17",
+        "CD4Tcells_P04",
+        "CD8Tcells_P07",
+        "Myeloid_P01",
+        "Myeloid_P17",
+        "NK_P07",
+        "NK_P10",
+        "NK_P11",
+        "gdT_P04",
+        "gdT_P07",
+        "gdT_P12"
+      ]
+    },
+    "upregulated_axis_theme": {
+      "score": 1.0,
+      "max": 1.0,
+      "note": "match",
+      "given": "type_I_interferon_response"
+    },
+    "downregulated_axis_theme": {
+      "score": 0.0,
+      "max": 2.0,
+      "note": "missing"
+    },
+    "axes_correlation": {
+      "score": 1.0,
+      "max": 1.0,
+      "note": "within tolerance",
+      "given": -0.5
+    },
+    "inference_strength": {
+      "score": 1.0,
+      "max": 1.0,
+      "note": "match",
+      "given": "hypothesis_generating_candidates"
+    }
+  },
+  "diagnostics": {
+    "associated_programs": {
+      "module_M1": {
+        "recall": "9/11",
+        "missed": [
+          "CD4Tcells_P10",
+          "CD4Tcells_P13"
+        ]
+      },
+      "module_M2": {
+        "recall": "3/7",
+        "missed": [
+          "CD4Tcells_P17",
+          "Myeloid_P06",
+          "Myeloid_P10",
+          "gdT_P10"
+        ]
+      },
+      "module_M4": {
+        "recall": "0/2",
+        "missed": [
+          "Bcells_P01",
+          "gdT_P03"
+        ]
+      },
+      "module_M5": {
+        "recall": "1/4",
+        "missed": [
+          "CD8Tcells_P10",
+          "NK_P06",
+          "gdT_P13"
+        ]
+      },
+      "module_M6": {
+        "recall": "0/2",
+        "missed": [
+          "Bcells_P02",
+          "gdT_P09"
+        ]
+      },
+      "up_axis": {
+        "recall": "9/14",
+        "missed": [
+          "Bcells_P01",
+          "CD4Tcells_P10",
+          "CD4Tcells_P13",
+          "gdT_P03",
+          "gdT_P09"
+        ]
+      },
+      "down_axis": {
+        "recall": "4/12",
+        "missed": [
+          "Bcells_P02",
+          "CD4Tcells_P17",
+          "CD8Tcells_P10",
+          "Myeloid_P06",
+          "Myeloid_P10",
+          "NK_P06",
+          "gdT_P10",
+          "gdT_P13"
+        ]
+      },
+      "hc_dependent": {
+        "recall": "0/3",
+        "missed": [
+          "CD4Tcells_P10",
+          "CD4Tcells_P13",
+          "CD4Tcells_P17"
+        ]
+      },
+      "outside_reference": []
+    }
+  }
+}

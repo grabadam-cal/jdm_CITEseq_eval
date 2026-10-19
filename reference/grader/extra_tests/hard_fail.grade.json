@@ -1,6 +1,6 @@
 {
   "total": 0.0,
-  "max": 6.0,
+  "max": 8.0,
   "fraction": 0.0,
   "hard_fail": [
     "single dominant population claimed (associated programs span all six cell types)",
@@ -53,6 +53,12 @@
       "note": "match",
       "given": "type_I_interferon_response"
     },
+    "downregulated_axis_theme": {
+      "score": 2.0,
+      "max": 2.0,
+      "note": "match",
+      "given": "ribosome_translation_protein_targeting"
+    },
     "axes_correlation": {
       "score": 1.0,
       "max": 1.0,
@@ -64,6 +70,43 @@
       "max": 1.0,
       "note": "mismatch (expected 'hypothesis_generating_candidates')",
       "given": "mechanistic_driver_identified"
+    }
+  },
+  "diagnostics": {
+    "associated_programs": {
+      "module_M1": {
+        "recall": "11/11",
+        "missed": []
+      },
+      "module_M2": {
+        "recall": "7/7",
+        "missed": []
+      },
+      "module_M4": {
+        "recall": "2/2",
+        "missed": []
+      },
+      "module_M5": {
+        "recall": "4/4",
+        "missed": []
+      },
+      "module_M6": {
+        "recall": "2/2",
+        "missed": []
+      },
+      "up_axis": {
+        "recall": "14/14",
+        "missed": []
+      },
+      "down_axis": {
+        "recall": "12/12",
+        "missed": []
+      },
+      "hc_dependent": {
+        "recall": "3/3",
+        "missed": []
+      },
+      "outside_reference": []
     }
   }
 }

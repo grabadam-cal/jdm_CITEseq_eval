@@ -16,5 +16,5 @@ Use vocabulary.json for all controlled labels and per-field answer semantics.
 Return EXACTLY the JSON object specified in eval_answer.json (same keys; replace every placeholder):
 
 <EVAL_ANSWER>
-{"disease_activity_architecture": "<token>", "associated_programs": ["<program id>", "..."], "upregulated_axis_theme": "<token>", "axes_correlation": <number|null>, "inference_strength": "<token>"}
+{"disease_activity_architecture": "<token>", "associated_programs": ["<program id>", "..."], "upregulated_axis_theme": "<token>", "downregulated_axis_theme": "<token>", "axes_correlation": <number|null>, "inference_strength": "<token>"}
 </EVAL_ANSWER>

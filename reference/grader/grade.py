@@ -15,6 +15,8 @@ Rule types (set per field in reference_answer.json "rules"):
                precision over core ∪ optional >= min_precision
 Hard fails ("hard_fail"): every condition in "when" must hold ({"field", "in": [...]}, {"field", "lt": x} or {"field", "gt": x});
 any triggered hard fail sets the total to 0.
+Diagnostics ("diagnostics", score-neutral): for a list field, recall on each named reference subset (e.g. modules,
+axes, HC-dependent programs) plus the listed items outside the reference.
 """
 import argparse
 import json
@@ -100,6 +102,20 @@ def condition_holds(answer, cond):
     raise ValueError(f"unknown condition: {cond}")
 
 
+def diagnostics(answer, reference):
+    out = {}
+    for field, subsets in reference.get("diagnostics", {}).items():
+        got = answer.get(field)
+        if not isinstance(got, list):
+            continue
+        got, exp = set(got), reference["answer"][field]
+        d = {name: {"recall": f"{len(got & set(xs))}/{len(xs)}", "missed": sorted(set(xs) - got)}
+             for name, xs in subsets.items()}
+        d["outside_reference"] = sorted(got - set(exp["core"]) - set(exp.get("optional", [])))
+        out[field] = d
+    return out
+
+
 def grade(answer, reference, vocab):
     fields, total, max_total = {}, 0.0, 0.0
     for field, rule in reference["rules"].items():
@@ -115,7 +131,8 @@ def grade(answer, reference, vocab):
     extra = sorted(set(answer) - set(reference["rules"]))
     return {"total": 0.0 if hard else round(total, 4), "max": max_total,
             "fraction": 0.0 if hard else round(total / max_total, 4),
-            "hard_fail": hard, "unexpected_fields": extra, "fields": fields}
+            "hard_fail": hard, "unexpected_fields": extra, "fields": fields,
+            "diagnostics": diagnostics(answer, reference)}
 
 
 def main():
