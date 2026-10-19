@@ -311,7 +311,7 @@ v1 and rollout 1 are frozen at tag `v1-rollout1`.
 analysis, and stating the method in the prompt would leak it.
 
 **v2 changes** (`GRADING_VERSION = "v2"`):
-1. **New field `downregulated_axis_theme`** (scoring in the table below). Partial token `stress_response_cell_death`
+1. **New field `downregulated_axis_theme`** (see the v2 scoring table). Partial token `stress_response_cell_death`
    = Module 5; it is added to both theme vocabularies. `build_reference.py` asserts the reference against sdt3 and
    Fig 5B.
    - **Weight 2 (vs 1 for the up-axis theme):** weight follows what the field discriminates. The up-axis theme is
@@ -319,19 +319,6 @@ analysis, and stating the method in the prompt would leak it.
      by module count (associated programs split 14 up / 12 down).
    - **Overlap:** missing the down axis also costs fields 1, 2 and 4, so the down axis is the most heavily weighted
      result. Intended: it is the less obvious half of the finding.
-2. **Field-2 diagnostics in `grade.json`.** These are score-neutral. Each one is recall of the agent's list against
-   a subset of the 26 reference programs; the subsets are stored in `reference_answer.json`.
-
-| Diagnostic | Reference subset (n) | Detects | Rollout 1 |
-|---|---|---|---|
-| module M1 (IFN hub) | Bcells_P07, P09; CD4Tcells_P04, P10, P13; CD8Tcells_P07; Myeloid_P17; NK_P10, P11; gdT_P04, P12 (11) | up-axis core found | 9/11 |
-| module M2 (ribosome/translation) | Bcells_P17; CD4Tcells_P17; Myeloid_P06, P10; NK_P07; gdT_P07, P10 (7) | down-axis core found | 3/7 |
-| module M5 (stress/cell death) | CD8Tcells_P10; Myeloid_P01; NK_P06; gdT_P13 (4) | second down module found | 1/4 |
-| modules M4, M6 | Bcells_P01, gdT_P03 (M4); Bcells_P02, gdT_P09 (M6) (2 each) | weaker, off-hub associations | 0/2, 0/2 |
-| up axis | M1 + M4 + gdT_P09 (14) | directional bias | 9/14 |
-| down axis | M2 + M5 + Bcells_P02 (12) | directional bias | 4/12 |
-| HC-dependent | CD4Tcells_P10, P13, P17 (3): 4-group p ≤ 0.044, patients-only p ≥ 0.12 | HC exclusion (reported, not scored: 3 borderline programs) | 0/3 |
-| extra programs | agent programs outside the 26, listed | false positives (precision side) | none |
 
 **v2 scoring:**
 
@@ -346,6 +333,20 @@ analysis, and stating the method in the prompt would leak it.
 | **max** | 6 | 8 | | | |
 
 Hard fails (total → 0, unchanged): `single_population_dominant`; `mechanistic_driver_identified`.
+
+2. **Field-2 diagnostics in `grade.json`.** These are score-neutral. Each one is recall of the agent's list against
+   a subset of the 26 reference programs; the subsets are stored in `reference_answer.json`.
+
+| Diagnostic | Reference subset (n) | Detects | Rollout 1 |
+|---|---|---|---|
+| module M1 (IFN hub) | Bcells_P07, P09; CD4Tcells_P04, P10, P13; CD8Tcells_P07; Myeloid_P17; NK_P10, P11; gdT_P04, P12 (11) | up-axis core found | 9/11 |
+| module M2 (ribosome/translation) | Bcells_P17; CD4Tcells_P17; Myeloid_P06, P10; NK_P07; gdT_P07, P10 (7) | down-axis core found | 3/7 |
+| module M5 (stress/cell death) | CD8Tcells_P10; Myeloid_P01; NK_P06; gdT_P13 (4) | second down module found | 1/4 |
+| modules M4, M6 | Bcells_P01, gdT_P03 (M4); Bcells_P02, gdT_P09 (M6) (2 each) | weaker, off-hub associations | 0/2, 0/2 |
+| up axis | M1 + M4 + gdT_P09 (14) | directional bias | 9/14 |
+| down axis | M2 + M5 + Bcells_P02 (12) | directional bias | 4/12 |
+| HC-dependent | CD4Tcells_P10, P13, P17 (3): 4-group p ≤ 0.044, patients-only p ≥ 0.12 | HC exclusion (reported, not scored: 3 borderline programs) | 0/3 |
+| extra programs | agent programs outside the 26, listed | false positives (precision side) | none |
 
 **Expected scores:** `correct` 8/8; `plausible_incorrect` 1.5/8 (19%, with `no_coherent_theme`); `correct_strict` 7/8;
 `hard_fail` 0; rollout 1 regraded **5/8 (63%)**.
