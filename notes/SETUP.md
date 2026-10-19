@@ -240,23 +240,24 @@ from `eval/eval_answer.json`. `meta.json` records the resolved model, the window
 from the session transcript, since the stream may carry only a compaction marker (shown live as a marker line). Ctrl-C stops the agent but still restores `eval/` and saves
 and grades the partial run.
 
-Run folder (nothing is ever overwritten; re-grades add files):
+Run folder (nothing is ever overwritten; re-grades add files) At the end of each run `redact_paths.py` replaces machine paths in the
+folder: project root → `<project>`, home → `~`, user name → `<user>`.
 
 | File | Contents |
 |---|---|
 | `prompt.txt`, `trace.jsonl`, `trace.md`, `final.txt` | exact prompt; raw stream (every message, tool call, result); readable trace; final message |
-| `session_transcript.jsonl`, `compactions.md` | the agent's own Claude Code transcript; each context compaction's recap, verbatim and in order (also inlined in `trace.md`) |
+| `session_transcript.jsonl`, `compactions.md` | the agent's own Claude Code transcript (**local only, gitignored**: it holds session context such as the user's email and git status); each context compaction's recap, verbatim and in order (also inlined in `trace.md`) |
 | `answer.json`, `grade.json` | parsed `<EVAL_ANSWER>`; grade **at run time** (against the snapshot) |
 | `grades/` | every grading of this run: `<version>_<timestamp>.json` + `history.tsv`. A re-grade under a new grading version adds a file here and leaves `grade.json` unchanged |
 | `snapshot/` | frozen copies of the eval inputs (task, answer format, README, vocabulary) and the grader (`reference_answer.json`, `grade.py`, `build_reference.py`) used for the run |
 | `outputs/` | files the agent created or modified in `eval/` |
-| `audit.txt`, `settings.json`, `meta.json` | out-of-scope access check; deny rules used; CLI, model, turns, cost, score, memory counts, SHA-256 of inputs |
+| `audit.txt`, `settings.json`, `meta.json` | out-of-scope access check; deny rules used (paths redacted); CLI, model, turns, cost, score, memory counts, SHA-256 of inputs |
 | `quarantined_memory_*/` | only if auto-memory existed before, or was written during, the run |
 
 **Containment (design decision).** The agent must not see answers, the paper or this design discussion. It needs
 Bash and runs unattended (`bypassPermissions`), so containment has five layers:
 1. **Scope:** working directory `eval/`, and the prompt names only `eval/` files. No `CLAUDE.md` loads.
-2. **Deny rules** (`rollout_settings.json`, 22 rules): `Bash(git:*)`; Read, Edit and Write are denied for `JCI_data/`, `reference/`,
+2. **Deny rules** (`rollout_settings.template.json`, 22 rules; filled in with local paths per run): `Bash(git:*)`; Read, Edit and Write are denied for `JCI_data/`, `reference/`,
    `notes/`, the `.docx`, `.git/`, `~/.claude/projects/**` (transcripts, including this design conversation) and
    `~/.claude/plans/**`. The file is kept in `reference/`, not `eval/.claude/`, so the deny list itself doesn't point
    to the answers.

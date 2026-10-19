@@ -93,14 +93,15 @@ cp "$ROOT/reference/grader/grade.py" "$ROOT/reference/grader/build_reference.py"
 # and every reference answer); .git/ is also denied and any git command is flagged in audit.txt.
 # deny rules (Read/Edit/Write) for everything outside eval/ that could leak answers; kept here, not in eval/,
 # so the agent can't read the list of where the answers are. Bash is not covered -> audit.txt is the backstop.
-SETTINGS="$ROOT/reference/rollouts/rollout_settings.json"
+# deny rules are kept as a path-free template; the run gets a filled-in copy (redacted again after the run)
+SETTINGS="$RUN/settings.json"
+sed -e "s|{ROOT}|$ROOT|g" -e "s|{HOME}|$HOME|g" "$ROOT/reference/rollouts/rollout_settings.template.json" > "$SETTINGS"
 args=(-p "$(cat "$EVAL/task.txt")" --output-format stream-json --verbose
       --session-id "$SESSION" --permission-mode "$PERM" --settings "$SETTINGS")
 args+=(--model "$MODEL")
 [[ -n "${MAX_BUDGET_USD:-}" ]] && args+=(--max-budget-usd "$MAX_BUDGET_USD")
 args+=(--autocompact "$MAX_CONTEXT")
 
-cp "$SETTINGS" "$RUN/settings.json"
 echo "rollout -> $RUN (session $SESSION, permission mode $PERM, model $MODEL, autocompact $MAX_CONTEXT, grader $GRADER_VERSION)"
 start=$(date +%s)
 set +e
@@ -138,3 +139,5 @@ PY="$EVAL/.venv/bin/python"
 "$PY" -I "$ROOT/reference/rollouts/render_trace.py" "$RUN" --session "$SESSION" --exit-status "$status" \
   --permission-mode "$PERM" --memory-before "$MEM_BEFORE" --memory-during "$MEM_DURING" --autocompact "$MAX_CONTEXT" --initial \
   --reference "$RUN/snapshot/grader/reference_answer.json"
+# strip machine-specific paths from everything that gets committed (session_transcript.jsonl stays local: gitignored)
+"$PY" -I "$ROOT/reference/rollouts/redact_paths.py" "$RUN"

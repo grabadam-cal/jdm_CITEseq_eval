@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(/{ROOT}/JCI_data/**)",
+      "Edit(/{ROOT}/JCI_data/**)",
+      "Write(/{ROOT}/JCI_data/**)",
+      "Read(/{ROOT}/reference/**)",
+      "Edit(/{ROOT}/reference/**)",
+      "Write(/{ROOT}/reference/**)",
+      "Read(/{ROOT}/notes/**)",
+      "Edit(/{ROOT}/notes/**)",
+      "Write(/{ROOT}/notes/**)",
+      "Read(/{ROOT}/*.docx)",
+      "Edit(/{ROOT}/*.docx)",
+      "Write(/{ROOT}/*.docx)",
+      "Read(/{HOME}/.claude/projects/**)",
+      "Edit(/{HOME}/.claude/projects/**)",
+      "Write(/{HOME}/.claude/projects/**)",
+      "Read(/{HOME}/.claude/plans/**)",
+      "Edit(/{HOME}/.claude/plans/**)",
+      "Write(/{HOME}/.claude/plans/**)",
+      "Read(/{ROOT}/.git/**)",
+      "Edit(/{ROOT}/.git/**)",
+      "Write(/{ROOT}/.git/**)",
+      "Bash(git:*)"
+    ]
+  }
+}

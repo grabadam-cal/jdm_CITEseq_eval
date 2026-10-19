@@ -10,3 +10,5 @@ reference/rollouts/.lock
 JCI_data/*
 !JCI_data/Rabadam_JCI_2024.pdf
 eval/data/*.csv
+# agent session transcripts hold Claude Code session context (user email, git status); kept local only
+reference/rollouts/*/session_transcript.jsonl

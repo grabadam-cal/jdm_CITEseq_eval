@@ -43,6 +43,20 @@ Cost drivers:
 | **Set the context rule once at the start** (`eval/` = neutral data + token definitions only) | several review rounds | The same decision was re-made file by file. |
 | **Write docs last** | repeated rewrites | The design changed after every rollout. |
 
+## Containment gap found after rollout 2 (not fixed)
+
+Claude Code adds the repo's git status and its 5 most recent commit messages to every session's context.
+`GIT_CEILING_DIRECTORIES` and the `.git` deny rules don't affect this. Because the project repo was created before
+rollout 2, that agent saw commit messages naming the v2 field and its weight ("downregulated_axis_theme (2 pts)"),
+`notes/SETUP.md` and the containment changes. It saw no reference values. Rollout 1 instead saw a git status of the
+home directory (file names only), because the home directory is a git repo.
+
+- **Fix for future runs:** hide `.git` for the duration of a run (rename it, and restore it on exit), or run in a
+  container that mounts only `eval/`. Then re-run the pre-flight test, checking the agent's session context as well
+  as its tool access.
+- **Lesson:** the pre-flight test checked what the agent can *access*, not what Claude Code *injects* into its
+  context. Both need checking.
+
 ## With more time instead
 
 - Several rollouts per grader version, to measure run-to-run variance (n = 1 now).
