@@ -333,6 +333,8 @@ analysis, and stating the method in the prompt would leak it.
 | HC-dependent | CD4Tcells_P10, P13, P17 (3): 4-group p ≤ 0.044, patients-only p ≥ 0.12 | HC exclusion (reported, not scored: 3 borderline programs) | 0/3 |
 | extra programs | agent programs outside the 26, listed | false positives (precision side) | none |
 
+**v2 scoring:**
+
 | Field | v1 pts | v2 pts | Full credit | Partial (points in v2) | 0 |
 |---|---|---|---|---|---|
 | `disease_activity_architecture` | 2 | 2 | `multi_population_coordinated_opposing_axes` | `…coordinated_single_axis` 1.0; `multi_population_independent` 0.25 | other tokens |
@@ -346,5 +348,4 @@ analysis, and stating the method in the prompt would leak it.
 Hard fails (total → 0, unchanged): `single_population_dominant`; `mechanistic_driver_identified`.
 
 **Expected scores:** `correct` 8/8; `plausible_incorrect` 1.5/8 (19%, with `no_coherent_theme`); `correct_strict` 7/8;
-`hard_fail` 0; rollout 1 regraded **5/8 (63%)**, diagnostics M1 9/11, M2 3/7, M5 1/4, M4 0/2, M6 0/2; up 9/14,
-down 4/12; HC-dependent 0/3.
+`hard_fail` 0; rollout 1 regraded **5/8 (63%)**.
