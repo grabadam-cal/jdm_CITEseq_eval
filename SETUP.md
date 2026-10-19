@@ -292,86 +292,52 @@ outside the project.
   audit clean. Score 5/6 (fails field 2). The agent wrote no files (inline `python -c`), so `outputs/` is empty and its
   intermediate results are in the trace's tool results.
 
-### 5.6 Revision 1: grader v2 (planned; awaiting approval)
-**Status:** spec only. Nothing below is implemented yet. v1 and rollout 1 are frozen at git tag `v1-rollout1`.
+### 5.6 Revision 1: grader v2 (spec; not implemented)
+v1 and rollout 1 are frozen at tag `v1-rollout1`.
 
-**What rollout 1 showed** (`20261018_184208_run`, v1 score 5/6). The score hides two method errors:
-1. **Patient data mishandled.**
-   - **HCs excluded:** the analysis used 22 JDM samples only.
-   - **Groups pooled on an ordinal scale:** DA_group was coded Inactive < Active < TNJDM and tested with Spearman, then
-     BH. The 13 programs it reported are *exactly* the set this pipeline produces.
-2. **Annotation from top genes only.** The agent read the top 5–10 marker genes of a few programs and ran no
-   per-program GSEA or module-level aggregation. It called the down axis "heterogeneous (AP-1, naive-lineage,
-   HLA-II), no coherent theme".
-
-**Why v1 missed most of this.** Each check below was computed on the eval data:
-- **Field 2 fails only because of the combination.** Spearman-ordinal-BH gives recall 0.50.
-  - HC exclusion alone passes: a patients-only 3-group ANOVA at nominal p<0.05 gives recall 0.88 and precision 0.92.
-  - Only 3 reference programs need the HCs to reach significance: CD4Tcells_P10, P13 and P17 (4-group p 0.004–0.044;
-    patients-only p 0.12–0.49).
-- **Nothing tests annotation.** The IFN signature is visible in top genes, so field 3 passes without GSEA. The other
-  three fields don't depend on either error either.
-- **The down-axis theme needs per-program GSEA, then module-level aggregation.**
-  - Top genes of the Module 2 programs don't look ribosomal (e.g. AIM2/IGHG1, CYP1B1/PADI4, CD160/GZMM).
-  - Per program (sdt3 fgsea, NES>0), ribosome/cotranslational targeting is the top GO:BP term in only 4 of the 11 down
-    programs (CD4Tcells_P17, NK_P07, gdT_P07, CD8Tcells_P10).
-  - At module level, the paper's module-enrichment test (Fig 5B) gives Module 2 = ribosome/translation (permutation
-    p = 1e-4) and Module 5 = chemical stress / cell death.
-  - Of the 11 down-axis reference programs, Module 2 has 7 and Module 5 has 4.
-- **The pre-rollout "v2" would have scored this run 6/6.** That plan was core = 15 BH programs, optional = 11
-  nominal-only. The agent's set has recall 13/15 = 0.87 against the BH core, so the plan rewards the wrong method.
-  **It is dropped.**
-
-**Decision: revise the grader, not the task instructions.**
-- Both errors are capability failures, and the task already gives what's needed: `DA_group` includes HC as a level,
-  and the gene scores are provided.
-- Fixing them in the prompt would mean naming the method (include HC, treat DA_group as categorical, run GSEA). That
-  leaks the analysis and turns the eval into an instruction-following test.
-- The real defect is validity: v1 gives 5/6 to an analysis that is wrong twice.
-- The task change is limited to the output schema (one new field), with no method hint.
-- **Known ambiguity, kept:** "disease activity *in JDM*" can be read as patients-only. The answer convention
-  ("associated with DA_group") and the HC level in DA_group resolve it.
-
-**v2 changes** (`GRADING_VERSION = "v2"`; max 6 → 7 points; hard fails unchanged):
-1. **New scored field `downregulated_axis_theme`** (categorical, 1 pt). It targets error 2.
-   - Reference: `ribosome_translation_protein_targeting`.
-   - Partial credit: `stress_response_cell_death` gets 0.25 (the Module 5 theme, a real but minority signal).
-     `no_coherent_theme` and all other tokens get 0.
-   - Vocabulary: `downregulated_axis_theme_vocabulary` = the up-axis list plus the new token
-     `stress_response_cell_death`. The token is added to the up-axis list too, so the two lists stay identical.
-   - Answer convention: mirrors the up-axis one ("…whose scores are lower with disease activity").
-   - Build check: `build_reference.py` asserts from sdt3 that ribosome/translation is the top theme for Module 2 and
-     the leading theme among the down-axis programs, and from Fig 5B that it is Module 2's enrichment. The build
-     fails otherwise.
-   - Edited files: `eval/eval_answer.json`, the `<EVAL_ANSWER>` line in `eval/task.txt`, `eval/data/vocabulary.json`.
-2. **Field-2 diagnostics in `grade.json`** (score-neutral). These target error 1. Module numbers stay grader-side.
-   - recall per reference module (M1, M2, M4, M5, M6)
-   - up-axis vs down-axis recall
-   - recall on the 3 HC-dependent programs
-   - The lists are computed in `build_reference.py` and stored under `diagnostics` in `reference_answer.json`.
-3. **Unchanged:** field 2 scoring (exact 26-program set, recall and precision ≥ 0.8), all other rules, and the hard
-   fails.
-
-**Expected results:**
-
-| Answer | v1 | v2 |
+**Observations (rollout 1, v1 score 5/6).**
+| Error | Evidence | Caught by v1? |
 |---|---|---|
-| `correct` (+ `ribosome_translation_protein_targeting`) | 6/6 | 7/7 |
-| `plausible_incorrect` (+ `no_coherent_theme`, as observed) | 1.5/6 | 1.5/7 (21%) |
-| `correct_strict` / `hard_fail` | 5/6 / 0 | 6/7 / 0 |
-| rollout 1, regraded (no down-theme field → 0) | 5/6 (83%) | **5/7 (71%)** |
+| HCs excluded; DA_group pooled as ordinal (Inactive < Active < TNJDM), Spearman + BH | reported set = exactly that pipeline's 13 programs | only in combination: field 2 recall 0.50. HC exclusion alone passes (patients-only ANOVA: recall 0.88, precision 0.92) |
+| programs annotated from top 5–10 genes; no GSEA, no module aggregation | down axis called "heterogeneous, no coherent theme" | no: up-axis IFN is visible in top genes; down axis not graded |
 
-Rollout 1's diagnostics under v2:
-- M1 9/11, M2 3/7, M5 1/4, M4 0/2, M6 0/2
-- up 9/14, down 4/12
-- HC-dependent 0/3
+- **Down-axis theme requires GSEA + module aggregation.** Module 2 top genes aren't ribosomal (AIM2/IGHG1, CYP1B1/PADI4,
+  CD160/GZMM). Ribosome/translation is the top fgsea term in 4/11 down programs (sdt3), but is Module 2's module-level
+  enrichment (Fig 5B, p = 1e-4). Module 5 = stress / cell death. Down axis: 7 programs in M2, 4 in M5.
+- **HC-dependent programs:** only 3 (CD4Tcells_P10, P13, P17; 4-group p ≤ 0.044, patients-only p ≥ 0.12).
+- **The pre-rollout v2 (core = BH 15, optional = nominal 11) would score rollout 1 6/6** (BH-core recall 0.87). Dropped.
 
-**Limit:** HC exclusion is visible in the diagnostics but isn't scored separately. Three borderline programs are too
-few to score robustly.
+**Decision: revise the grader, not the task.** Both are capability failures; the task already provides DA_group with an
+HC level and the gene scores. Stating the method in the prompt would leak the analysis. The only task change is one
+output field. Known ambiguity, kept: "disease activity *in JDM*" could suggest patients-only; the answer convention
+("associated with DA_group") resolves it.
 
-**Steps:**
-1. Implement.
-2. Run `test_grader.sh` and `EXTRA=1`.
-3. Regrade rollout 1 with `render_trace.py`. This adds `grades/v2_*.json`; v1's `grade.json` is kept.
-4. Commit and tag `v2-grader`.
-5. Rerun: `MAX_BUDGET_USD=20 bash reference/rollouts/run_rollout.sh v2` (run by the user).
+**v2 changes** (`GRADING_VERSION = "v2"`, max 6 → 8, hard fails unchanged):
+1. **New field `downregulated_axis_theme`, categorical, 2 pts.** Reference `ribosome_translation_protein_targeting`;
+   partial `stress_response_cell_death` 0.25 (Module 5). New token added to both theme vocabularies; answer
+   convention mirrors the up-axis one. `build_reference.py` asserts the reference against sdt3 and Fig 5B.
+   - **Weight 2 (vs 1 for the up-axis theme):** weight follows what the field discriminates. The up-axis theme is
+     answerable from top genes; the down-axis theme requires program-level GSEA then module aggregation. Not weighted
+     by module count (associated programs split 14 up / 12 down).
+   - **Overlap:** missing the down axis also costs fields 1, 2 and 4, so the down axis is the most heavily weighted
+     result. Intended: it is the less obvious half of the finding.
+2. **Field-2 diagnostics in `grade.json`, score-neutral:** recall per module, up vs down recall, recall on the 3
+   HC-dependent programs (lists stored in `reference_answer.json`). HC exclusion is reported, not scored: 3 borderline
+   programs are too few to score robustly.
+
+| Field | v1 | v2 |
+|---|---|---|
+| `disease_activity_architecture` | 2 | 2 |
+| `associated_programs` | 1 | 1 |
+| `upregulated_axis_theme` | 1 | 1 |
+| `downregulated_axis_theme` | – | 2 |
+| `axes_correlation` | 1 | 1 |
+| `inference_strength` | 1 | 1 |
+| **max** | 6 | 8 |
+
+**Expected scores:** `correct` 8/8; `plausible_incorrect` 1.5/8 (19%, with `no_coherent_theme`); `correct_strict` 7/8;
+`hard_fail` 0; rollout 1 regraded **5/8 (63%)**, diagnostics M1 9/11, M2 3/7, M5 1/4, M4 0/2, M6 0/2; up 9/14,
+down 4/12; HC-dependent 0/3.
+
+**Steps:** implement → `test_grader.sh` (+ `EXTRA=1`) → regrade rollout 1 (adds `grades/v2_*.json`) → commit, tag
+`v2-grader` → rerun `MAX_BUDGET_USD=20 bash reference/rollouts/run_rollout.sh v2`.
