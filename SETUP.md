@@ -338,6 +338,3 @@ Hard fails (total → 0, unchanged): `single_population_dominant`; `mechanistic_
 **Expected scores:** `correct` 8/8; `plausible_incorrect` 1.5/8 (19%, with `no_coherent_theme`); `correct_strict` 7/8;
 `hard_fail` 0; rollout 1 regraded **5/8 (63%)**, diagnostics M1 9/11, M2 3/7, M5 1/4, M4 0/2, M6 0/2; up 9/14,
 down 4/12; HC-dependent 0/3.
-
-**Steps:** implement → `test_grader.sh` (+ `EXTRA=1`) → regrade rollout 1 (adds `grades/v2_*.json`) → commit, tag
-`v2-grader` → rerun `MAX_BUDGET_USD=20 bash reference/rollouts/run_rollout.sh v2`.
