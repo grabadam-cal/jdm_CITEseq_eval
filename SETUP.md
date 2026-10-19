@@ -20,8 +20,9 @@ LatchBio_Assessment_2026/
 
 **Data is not in the git repo** (only the paper PDF is). `.gitignore` excludes `JCI_data/*` except the PDF, and
 `eval/data/*.csv`. To rebuild: download the Supporting Data Values and Supplemental Tables 3/4 from the article page
-into `JCI_data/`, then run `reference/xlsx_to_csv.py` (sdval, sdt3) and `reference/export_sdt4.R` (sdt4). The eval CSVs
-in §2 are text copies of these, with eval IDs from `reference/eval_id_map.csv`.
+into `JCI_data/`, run `reference/xlsx_to_csv.py` (sdval, sdt3) and `reference/export_sdt4.R` (sdt4), then
+`python3 -I reference/build_eval_data.py` to write `eval/data/*.csv` (text copies with eval IDs from
+`reference/eval_id_map.csv`; verified byte-identical to the originals).
 
 ## 2. Eval inputs (`eval/data/`)
 
@@ -154,16 +155,8 @@ Rules behind the reference:
 - **Directionality** is captured by the architecture call (opposing axes), the up-axis theme, and the sign of the
   cross-axis correlation, not by a sign for the 4-level factor.
 
-**Planned step-4 revision (v2): threshold-tolerant `associated_programs`.** v1 is an exact-set reference: an agent
-that applies a standard multiple-testing correction (BH, 15 programs) gets recall 15/26 = 0.58 and fails field 2,
-even though its analysis is valid. If the rollout shows this (very plausible), the justified revision is to split
-the reference into:
-- **core** = 15 BH-surviving programs, which any correct analysis must find
-- **optional** = 11 nominal-only programs, accepted but not required
-
-This is implemented but switched off: set `GRADING_VERSION = "v2"` in `build_reference.py`, regenerate, and re-run
-the tests. Only claim it as the revision if the rollout actually shows the behavior; otherwise pick a different
-revision from what the rollout reveals.
+The revision made after rollout 1 is in §5.6. (A threshold-tolerant "core = BH / optional = nominal" v2, planned
+before the rollout, is **dropped**; see §5.6.)
 
 **Grading concepts: first pass (minimum needed to explain the grader).**
 
@@ -178,30 +171,29 @@ revision from what the rollout reveals.
 
 | Term | Definition |
 |---|---|
-| recall | \|answer ∩ reference\| / \|reference\| (v2: computed over core only) |
-| precision | \|answer ∩ acceptable\| / \|answer\|; acceptable = reference (v2: core ∪ optional) |
+| recall | \|answer ∩ reference\| / \|reference\| |
+| precision | \|answer ∩ reference\| / \|answer\| |
 | min_recall / min_precision | thresholds; both must be met |
-| core / optional (v2) | core = items any correct analysis must report; optional = defensible but not required |
 | partial | fraction of a categorical field's points for a named near-miss token |
 | tolerance (`abs_tol`), `require_sign` | numeric field: maximum \|given − reference\| for full points; required direction |
 | brief test / extra test | `test_answers/` (correct must score 100%, plausible-incorrect < 50%) / `extra_tests/` (grading-assumption checks) |
 
 Field 2 scoring examples:
 
-| Agent's list | v1 (reference = 26 nominal) | v2 (core 15 + optional 11) |
-|---|---|---|
-| all 26 nominal programs (paper-style) | recall 1.00, precision 1.00 → 1 | 1.00 / 1.00 → 1 |
-| the 15 BH programs (strict) | recall 0.58 → **0** | 1.00 / 1.00 → 1 |
-| 21 of the 26 nominal | recall 0.81 → 1 | depends on how many of the 15 core are in it |
-| 26 nominal + 7 non-associated | precision 26/33 = 0.79 → **0** | same → **0** |
-| IFN-axis programs only (misses the down axis) | recall ≤ 0.42 → **0** | recall 9/15 = 0.60 → **0** |
+| Agent's list | Field 2 (reference = 26 nominal) |
+|---|---|
+| all 26 nominal programs (paper-style) | recall 1.00, precision 1.00 → 1 |
+| the 15 BH programs (double correction) | recall 0.58 → **0** |
+| 21 of the 26 nominal | recall 0.81 → 1 |
+| 26 nominal + 7 non-associated | precision 26/33 = 0.79 → **0** |
+| IFN-axis programs only (misses the down axis) | recall ≤ 0.42 → **0** |
 
-The 0.8 thresholds tolerate small differences in test choice but not a whole missing axis. 11 of the 26 nominal (and
-6 of the 15 core) programs are on the down axis.
+The 0.8 thresholds tolerate small differences in test choice but not a whole missing axis. 11 of the 26 nominal
+programs are on the down axis.
 
 How to refine a test:
 1. Change the criterion or threshold in `build_reference.py` (constants at the top: `ALPHA`, `GRADING_VERSION`; the
-   `rules` dict).
+   `rules` dict). Bump `GRADING_VERSION` for any change that alters scores.
 2. Regenerate with `eval/.venv/bin/python -I reference/grader/build_reference.py`.
 3. Re-run `bash reference/grader/test_grader.sh` (with `EXTRA=1` if the change touches thresholds or hard fails).
 4. Re-grade existing rollouts without re-running them: `eval/.venv/bin/python -I reference/rollouts/render_trace.py
@@ -244,12 +236,12 @@ total = 0 if any hard fail else sum(scores)
   | `inference_strength` | `confirmatory_association`: over-claims from 27 samples | 0.25/1 |
 
 - **Extra tests** (`reference/grader/extra_tests/`, run with `EXTRA=1 bash reference/grader/test_grader.sh`). These
-  check grading assumptions. `correct_strict` is also the test case for the planned v2 revision:
+  check grading assumptions:
 
-  | Test answer | What it checks | v1 | v2 (expected) |
-  |---|---|---|---|
-  | `correct_strict.txt` | A stricter but valid analysis: the 15 BH programs only, axes r = −0.52. Same as `correct` on the other 3 fields. | 5/6 (fails field 2: the gap v2 fixes) | 6/6 |
-  | `hard_fail.txt` | `correct` plus disqualifying claims (`single_population_dominant`; `mechanistic_driver_identified`). Hard fails override field credit. | 0/6 | 0/6 |
+  | Test answer | What it checks | v1 |
+  |---|---|---|
+  | `correct_strict.txt` | BH on top of a hypothesis-generating screen: the 15 BH programs only, axes r = −0.52; otherwise as `correct`. Penalized on field 2 **by design** (§4: no cross-program BH). | 5/6 |
+  | `hard_fail.txt` | `correct` plus disqualifying claims (`single_population_dominant`; `mechanistic_driver_identified`). Hard fails override field credit. | 0/6 |
 
 ### 5.5 Rollouts (`reference/rollouts/`)
 ```bash
@@ -268,7 +260,7 @@ Run folder (nothing is ever overwritten; re-grades add files):
 | `prompt.txt`, `trace.jsonl`, `trace.md`, `final.txt` | exact prompt; raw stream (every message, tool call, result); readable trace; final message |
 | `session_transcript.jsonl`, `compactions.md` | the agent's own Claude Code transcript; each context compaction's recap, verbatim and in order (also inlined in `trace.md`) |
 | `answer.json`, `grade.json` | parsed `<EVAL_ANSWER>`; grade **at run time** (against the snapshot) |
-| `grades/` | every grading of this run: `<version>_<timestamp>.json` + `history.tsv`. A re-grade (e.g. under v2) adds a file here and leaves `grade.json` unchanged |
+| `grades/` | every grading of this run: `<version>_<timestamp>.json` + `history.tsv`. A re-grade under a new grading version adds a file here and leaves `grade.json` unchanged |
 | `snapshot/` | frozen copies of the eval inputs (task, answer format, README, vocabulary) and the grader (`reference_answer.json`, `grade.py`, `build_reference.py`) used for the run |
 | `outputs/` | files the agent created or modified in `eval/` |
 | `audit.txt`, `settings.json`, `meta.json` | out-of-scope access check; deny rules used; CLI, model, turns, cost, score, memory counts, SHA-256 of inputs |
@@ -294,8 +286,92 @@ outside the project.
   transcript, and Read/Edit of `grade.py` were all denied; `eval/` files were allowed. Grep and Glob don't exist in
   CLI 2.1.292, so searching goes through Bash, which the audit covers.
 - **Pipeline:** stub-`claude` runs (no API calls). A concurrent start is refused; two runs get separate folders;
-  `eval/` is byte-identical after the runs; a v2 re-grade adds `grades/v2_*.json` (5/6 → 6/6 for `correct_strict`)
+  `eval/` is byte-identical after the runs; a re-grade under another reference adds `grades/<version>_*.json`
   and leaves `grade.json` unchanged; memory is quarantined before and after the run and flagged.
 - **Rollout 1** (`20261018_184208_run`, v1): claude-sonnet-5, 20 turns, 19 tool calls, 4.3 min, $0.49, no compaction,
   audit clean. Score 5/6 (fails field 2). The agent wrote no files (inline `python -c`), so `outputs/` is empty and its
   intermediate results are in the trace's tool results.
+
+### 5.6 Revision 1: grader v2 (planned; awaiting approval)
+**Status:** spec only. Nothing below is implemented yet. v1 and rollout 1 are frozen at git tag `v1-rollout1`.
+
+**What rollout 1 showed** (`20261018_184208_run`, v1 score 5/6). The score hides two method errors:
+1. **Patient data mishandled.**
+   - **HCs excluded:** the analysis used 22 JDM samples only.
+   - **Groups pooled on an ordinal scale:** DA_group was coded Inactive < Active < TNJDM and tested with Spearman, then
+     BH. The 13 programs it reported are *exactly* the set this pipeline produces.
+2. **Annotation from top genes only.** The agent read the top 5–10 marker genes of a few programs and ran no
+   per-program GSEA or module-level aggregation. It called the down axis "heterogeneous (AP-1, naive-lineage,
+   HLA-II), no coherent theme".
+
+**Why v1 missed most of this.** Each check below was computed on the eval data:
+- **Field 2 fails only because of the combination.** Spearman-ordinal-BH gives recall 0.50.
+  - HC exclusion alone passes: a patients-only 3-group ANOVA at nominal p<0.05 gives recall 0.88 and precision 0.92.
+  - Only 3 reference programs need the HCs to reach significance: CD4Tcells_P10, P13 and P17 (4-group p 0.004–0.044;
+    patients-only p 0.12–0.49).
+- **Nothing tests annotation.** The IFN signature is visible in top genes, so field 3 passes without GSEA. The other
+  three fields don't depend on either error either.
+- **The down-axis theme needs per-program GSEA, then module-level aggregation.**
+  - Top genes of the Module 2 programs don't look ribosomal (e.g. AIM2/IGHG1, CYP1B1/PADI4, CD160/GZMM).
+  - Per program (sdt3 fgsea, NES>0), ribosome/cotranslational targeting is the top GO:BP term in only 4 of the 11 down
+    programs (CD4Tcells_P17, NK_P07, gdT_P07, CD8Tcells_P10).
+  - At module level, the paper's module-enrichment test (Fig 5B) gives Module 2 = ribosome/translation (permutation
+    p = 1e-4) and Module 5 = chemical stress / cell death.
+  - Of the 11 down-axis reference programs, Module 2 has 7 and Module 5 has 4.
+- **The pre-rollout "v2" would have scored this run 6/6.** That plan was core = 15 BH programs, optional = 11
+  nominal-only. The agent's set has recall 13/15 = 0.87 against the BH core, so the plan rewards the wrong method.
+  **It is dropped.**
+
+**Decision: revise the grader, not the task instructions.**
+- Both errors are capability failures, and the task already gives what's needed: `DA_group` includes HC as a level,
+  and the gene scores are provided.
+- Fixing them in the prompt would mean naming the method (include HC, treat DA_group as categorical, run GSEA). That
+  leaks the analysis and turns the eval into an instruction-following test.
+- The real defect is validity: v1 gives 5/6 to an analysis that is wrong twice.
+- The task change is limited to the output schema (one new field), with no method hint.
+- **Known ambiguity, kept:** "disease activity *in JDM*" can be read as patients-only. The answer convention
+  ("associated with DA_group") and the HC level in DA_group resolve it.
+
+**v2 changes** (`GRADING_VERSION = "v2"`; max 6 → 7 points; hard fails unchanged):
+1. **New scored field `downregulated_axis_theme`** (categorical, 1 pt). It targets error 2.
+   - Reference: `ribosome_translation_protein_targeting`.
+   - Partial credit: `stress_response_cell_death` gets 0.25 (the Module 5 theme, a real but minority signal).
+     `no_coherent_theme` and all other tokens get 0.
+   - Vocabulary: `downregulated_axis_theme_vocabulary` = the up-axis list plus the new token
+     `stress_response_cell_death`. The token is added to the up-axis list too, so the two lists stay identical.
+   - Answer convention: mirrors the up-axis one ("…whose scores are lower with disease activity").
+   - Build check: `build_reference.py` asserts from sdt3 that ribosome/translation is the top theme for Module 2 and
+     the leading theme among the down-axis programs, and from Fig 5B that it is Module 2's enrichment. The build
+     fails otherwise.
+   - Edited files: `eval/eval_answer.json`, the `<EVAL_ANSWER>` line in `eval/task.txt`, `eval/data/vocabulary.json`.
+2. **Field-2 diagnostics in `grade.json`** (score-neutral). These target error 1. Module numbers stay grader-side.
+   - recall per reference module (M1, M2, M4, M5, M6)
+   - up-axis vs down-axis recall
+   - recall on the 3 HC-dependent programs
+   - The lists are computed in `build_reference.py` and stored under `diagnostics` in `reference_answer.json`.
+3. **Unchanged:** field 2 scoring (exact 26-program set, recall and precision ≥ 0.8), all other rules, and the hard
+   fails.
+
+**Expected results:**
+
+| Answer | v1 | v2 |
+|---|---|---|
+| `correct` (+ `ribosome_translation_protein_targeting`) | 6/6 | 7/7 |
+| `plausible_incorrect` (+ `no_coherent_theme`, as observed) | 1.5/6 | 1.5/7 (21%) |
+| `correct_strict` / `hard_fail` | 5/6 / 0 | 6/7 / 0 |
+| rollout 1, regraded (no down-theme field → 0) | 5/6 (83%) | **5/7 (71%)** |
+
+Rollout 1's diagnostics under v2:
+- M1 9/11, M2 3/7, M5 1/4, M4 0/2, M6 0/2
+- up 9/14, down 4/12
+- HC-dependent 0/3
+
+**Limit:** HC exclusion is visible in the diagnostics but isn't scored separately. Three borderline programs are too
+few to score robustly.
+
+**Steps:**
+1. Implement.
+2. Run `test_grader.sh` and `EXTRA=1`.
+3. Regrade rollout 1 with `render_trace.py`. This adds `grades/v2_*.json`; v1's `grade.json` is kept.
+4. Commit and tag `v2-grader`.
+5. Rerun: `MAX_BUDGET_USD=20 bash reference/rollouts/run_rollout.sh v2` (run by the user).
