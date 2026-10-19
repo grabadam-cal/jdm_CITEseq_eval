@@ -319,9 +319,19 @@ analysis, and stating the method in the prompt would leak it.
      by module count (associated programs split 14 up / 12 down).
    - **Overlap:** missing the down axis also costs fields 1, 2 and 4, so the down axis is the most heavily weighted
      result. Intended: it is the less obvious half of the finding.
-2. **Field-2 diagnostics in `grade.json`, score-neutral:** recall per module, up vs down recall, recall on the 3
-   HC-dependent programs (lists stored in `reference_answer.json`). HC exclusion is reported, not scored: 3 borderline
-   programs are too few to score robustly.
+2. **Field-2 diagnostics in `grade.json`.** These are score-neutral. Each one is recall of the agent's list against
+   a subset of the 26 reference programs; the subsets are stored in `reference_answer.json`.
+
+| Diagnostic | Reference subset (n) | Detects | Rollout 1 |
+|---|---|---|---|
+| module M1 (IFN hub) | Bcells_P07, P09; CD4Tcells_P04, P10, P13; CD8Tcells_P07; Myeloid_P17; NK_P10, P11; gdT_P04, P12 (11) | up-axis core found | 9/11 |
+| module M2 (ribosome/translation) | Bcells_P17; CD4Tcells_P17; Myeloid_P06, P10; NK_P07; gdT_P07, P10 (7) | down-axis core found | 3/7 |
+| module M5 (stress/cell death) | CD8Tcells_P10; Myeloid_P01; NK_P06; gdT_P13 (4) | second down module found | 1/4 |
+| modules M4, M6 | Bcells_P01, gdT_P03 (M4); Bcells_P02, gdT_P09 (M6) (2 each) | weaker, off-hub associations | 0/2, 0/2 |
+| up axis | M1 + M4 + gdT_P09 (14) | directional bias | 9/14 |
+| down axis | M2 + M5 + Bcells_P02 (12) | directional bias | 4/12 |
+| HC-dependent | CD4Tcells_P10, P13, P17 (3): 4-group p ≤ 0.044, patients-only p ≥ 0.12 | HC exclusion (reported, not scored: 3 borderline programs) | 0/3 |
+| extra programs | agent programs outside the 26, listed | false positives (precision side) | none |
 
 | Field | v1 pts | v2 pts | Full credit | Partial (points in v2) | 0 |
 |---|---|---|---|---|---|
