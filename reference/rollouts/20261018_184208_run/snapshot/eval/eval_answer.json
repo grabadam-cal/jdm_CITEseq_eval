@@ -1,0 +1,13 @@
+{
+  "description": "Answer format. Return this object, with every placeholder replaced, between <EVAL_ANSWER> and </EVAL_ANSWER>. Allowed values and field definitions are in data/vocabulary.json.",
+  "answer": {
+    "disease_activity_architecture": "<token>",
+    "associated_programs": [
+      "<program id>",
+      "..."
+    ],
+    "upregulated_axis_theme": "<token>",
+    "axes_correlation": "<number or null>",
+    "inference_strength": "<token>"
+  }
+}

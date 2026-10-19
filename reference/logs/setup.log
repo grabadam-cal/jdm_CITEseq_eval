@@ -1,0 +1,235 @@
+== [0/4] Paper code (DECIPHER-seq functions, sourced not installed)
+   commit 1ba1398 (Wed Feb 5 16:15:06 2025 -0800)
+== [1/4] Homebrew (Brewfile; existing formulae are not upgraded)
+Using python@3.12
+Using pkgconf
+Using gcc
+Using gmp
+Installing glpk
+Installing libxml2
+Installing freetype
+Installing harfbuzz
+Installing fribidi
+Installing libpng
+Installing libtiff
+Installing jpeg-turbo
+Installing cairo
+Warning: You are using macOS on Intel x86_64.
+We do not provide support for this platform (as-of September 2026, announced August 2025).
+
+Apple have dropped Intel x86_64 support in macOS Golden Gate (27).
+GitHub Actions are dropping macOS Intel x86_64 runners in 2027.
+Homebrew is a non-profit project run entirely by volunteers, not employees.
+If the biggest companies in the world cannot support macOS Intel x86_64
+any longer, sadly neither can we.
+
+Homebrew no longer builds bottles for this configuration.
+Existing bottles may still work, but updated formulae may build from source.
+==> Downloading bottle manifests
+✔︎ Bottle Manifest glpk (5.0)
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/r/readline.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/847f3d2695db81ba245ba753d5d931a8d707d990757dffec98612d9c0b291adf--readline.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/p/pkgconf.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/592b616e5bcaa94840c30e7a58c0d6f5191abdbea0fca76a81c7c7bce8c37aec--pkgconf.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/c/cmake.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/74f4ea52a6b6bf1eec7e3478781f6048d1a6a20199e0b89fc5cf82e68a93537c--cmake.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/j/json-c.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/8ad593f19c0d687d7eeeeeab6a11443a7f029b004bcbb869932c7e6448d36178--json-c.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/lib/libunistring.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/b66ee726deebcef74c928ac108701315b15b72fbe59c07641b46a4e94cff4a0d--libunistring.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/g/gettext.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/3d0f917ee08cbdcc713b2a67899ae02a87476c2ffe929c7fc64e0fc0d2f6fd23--gettext.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/p/pcre2.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/724b1859549e735748b78670968e31e3255a56a4ecc8c7a15d772a160ca90b3f--pcre2.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/n/ninja.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/213f3886d2973275787f67820c7f73b13653a990f4c9c8ffc0825aa8fd9142b3--ninja.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/m/mpdecimal.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/e986228b0a4094f70441880ace51915ecffd9bb2ce409b69dab71de2201a4b68--mpdecimal.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/o/openssl@4.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/44b6de7015d7b3969c770c70be2508282b0cd30b066318eb228d830f37b8b8c7--openssl@4.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/s/sqlite.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/077c70f56e805d81dd4b223b8950287797ca1f0d184727bfbbec424ec0474010--sqlite.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/x/xz.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/312571e0202f368606d6ad40a69d0908241dbc991008e317fa412d37e9bc8872--xz.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/p/python@3.15.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/96be750d25cad77ff6de3de4b2a25a44ffe5d5e7422897b632629562c63a4cef--python@3.15.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Patches/python/3.13-sysconfig.diff
+Warning: Cannot verify integrity of '375d35e25ed65ca41d9e05d9a8e4f8cb35e7e9e680e565494cb0f9af46828808--3.13-sysconfig.diff'.
+No checksum was provided.
+For your reference, the checksum is:
+  sha256 "9f2eae1d08720b06ac3d9ef1999c09388b9db39dfb52687fc261ff820bff20c3"
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/p/python@3.14.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/f05aef647ac905d83f9079b8e12db89ed3ec4b23d1189d5470f5ec1e80014dcc--python@3.14.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/g/glib.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/00710fa591dc5057f32dd559bd2e76488d5cb7aaef7174db65dbc34206f86f22--glib.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Patches/glib/hardcoded-paths.diff
+Warning: Cannot verify integrity of 'dec3286defe28206d9b808a0f5780dda20f6be90d8eb881002c7ad9d1f948b43--hardcoded-paths.diff'.
+No checksum was provided.
+For your reference, the checksum is:
+  sha256 "d846efd0bf62918350da94f850db33b0f8727fece9bfaf8164566e3094e80c97"
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/x/xorgproto.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/35085ff2aab6be47fe622be0b616e9a912503a88fcb49fab9db7e0211f46c917--xorgproto.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/lib/libx11.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/a0a2e91d5d561e91631be7ab34d6368b535484d1974e59850e3c80307f1f2e81--libx11.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/lib/libxrender.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/b89e61459c947456146a05d7d7cc84e0dba7cc00626fae0aeec7484d75f67509--libxrender.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/g/gobject-introspection.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/5763f4ea7c4b31b5e9cedd25dd94fcff9fdf648336d93614439e2f285d3cbfbb--gobject-introspection.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/g/giflib.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/d96b1bfee55ffb2988a04dbc93bdfa3394a37471495e9ea1e2ab0e7cd9f670e7--giflib.rb
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/76bef543ad23d9705ee24960e9dd59e88ba60a7a/Formula/w/webp.rb
+Already downloaded: ~/Library/Caches/Homebrew/downloads/71db6eee4d6e1e22f18f8732866839ef5847b78439ae5699bb4ee482d1034770--webp.rb
+==> Fetching downloads for: glpk, libxml2, freetype, harfbuzz, fribidi, libpng, libtiff, jpeg-turbo and cairo
+✔︎ Bottle glpk (5.0)
+✔︎ API Source libxml2.rb
+✔︎ API Source freetype.rb
+✔︎ API Source harfbuzz.rb
+✔︎ API Source fribidi.rb
+✔︎ API Source libpng.rb
+✔︎ API Source libtiff.rb
+✔︎ API Source jpeg-turbo.rb
+✔︎ API Source cairo.rb
+✔︎ API Source readline.rb
+✔︎ Patch readline83-001
+✔︎ Patch readline83-002
+✔︎ Patch readline83-003
+✔︎ Patch readline83-004
+✔︎ Patch readline83-005
+✔︎ Patch readline83-006
+✔︎ Formula readline (8.3.6)
+✔︎ API Source pkgconf.rb
+✔︎ Formula pkgconf (3.0.9)
+✔︎ Formula libxml2 (2.15.4)
+✔︎ Bottle Manifest brotli (1.2.0)
+✔︎ Bottle brotli (1.2.0)
+✔︎ Formula libpng (1.6.59)
+✔︎ Formula freetype (2.15.0)
+✔︎ API Source cmake.rb
+✔︎ Formula cmake (4.4.4)
+✔︎ API Source json-c.rb
+✔︎ Formula json-c (0.19)
+✔︎ API Source libunistring.rb
+✔︎ Formula libunistring (1.5)
+✔︎ API Source gettext.rb
+✔︎ Formula gettext (1.0)
+✔︎ Bottle Manifest fontconfig (2.18.3)
+✔︎ Bottle fontconfig (2.18.3)
+✔︎ API Source pcre2.rb
+✔︎ Formula pcre2 (10.49)
+✔︎ Bottle Manifest bison (3.8.2)
+✔︎ Bottle bison (3.8.2)
+✔︎ API Source ninja.rb
+✔︎ Formula ninja (1.13.2)
+✔︎ Bottle Manifest ca-certificates (2026-09-25)
+✔︎ Bottle ca-certificates (2026-09-25)
+✔︎ API Source mpdecimal.rb
+✔︎ Formula mpdecimal (4.0.1)
+✔︎ API Source openssl@4.rb
+✔︎ Formula openssl@4 (4.0.3)
+✔︎ API Source sqlite.rb
+✔︎ Formula sqlite (3.54.1)
+✔︎ API Source xz.rb
+✔︎ Formula xz (5.8.4)
+✔︎ Bottle Manifest zstd (1.5.7_1)
+✔︎ Bottle zstd (1.5.7_1)
+✔︎ API Source python@3.15.rb
+✔︎ Resource python@3.15--flit-core
+✔︎ Resource python@3.15--pip
+✔︎ Formula python@3.15 (3.15.0)
+✔︎ Bottle Manifest meson (1.12.1)
+✔︎ Bottle meson (1.12.1)
+✔︎ Bottle Manifest python-setuptools (84.0.0_1)
+✔︎ Bottle python-setuptools (84.0.0_1)
+✔︎ API Source python@3.14.rb
+✔︎ Resource python@3.14--packaging
+✔︎ Resource python@3.14--wheel
+✔︎ Patch 3364e7e62fa24d0e19133fb0f90b1c24ef1110c5.patch?full_index=1
+✔︎ Patch c5e4ae03004767104dcf2d2c7b19f663700cc129.patch?full_index=1
+✔︎ Patch 3c2a3014af7d73cc34f2498f60fdf863d9bc7c6c.patch?full_index=1
+✔︎ Patch 1e21cf6fee3830012e458c0fe5dbc6fcd45ace92.patch?full_index=1
+✔︎ Patch 4974d8e8f387df97abd2521067f9b7a31c9c78fe.patch?full_index=1
+✔︎ Formula python@3.14 (3.14.8)
+✔︎ API Source glib.rb
+✔︎ Resource glib--gobject-introspection
+✔︎ Formula glib (2.90.1)
+✔︎ Bottle Manifest util-macros (1.20.2)
+✔︎ Bottle util-macros (1.20.2)
+✔︎ API Source xorgproto.rb
+✔︎ Formula xorgproto (2026.1)
+✔︎ Bottle Manifest libxau (1.0.12)
+✔︎ Bottle libxau (1.0.12)
+✔︎ Bottle Manifest libxdmcp (1.1.5)
+✔︎ Bottle libxdmcp (1.1.5)
+✔︎ Bottle Manifest libxcb (1.17.0)
+✔︎ Bottle libxcb (1.17.0)
+✔︎ Bottle Manifest xtrans (1.6.0)
+✔︎ Bottle xtrans (1.6.0)
+✔︎ API Source libx11.rb
+✔︎ Formula libx11 (1.8.14)
+✔︎ Bottle Manifest libxext (1.3.7)
+✔︎ Bottle libxext (1.3.7)
+✔︎ API Source libxrender.rb
+✔︎ Formula libxrender (0.9.13)
+✔︎ Bottle Manifest lzo (2.10)
+✔︎ Bottle lzo (2.10)
+✔︎ Bottle Manifest pixman (0.46.4)
+✔︎ Bottle pixman (0.46.4)
+✔︎ Formula cairo (1.18.6)
+✔︎ Bottle Manifest graphite2 (1.3.15)
+✔︎ Bottle graphite2 (1.3.15)
+✔︎ Bottle Manifest icu4c@78 (78.3)
+✔︎ Bottle icu4c@78 (78.3)
+✔︎ API Source gobject-introspection.rb
+✔︎ Resource gobject-introspection--mako
+✔︎ Resource gobject-introspection--markdown
+✔︎ Resource gobject-introspection--markupsafe
+✔︎ Resource gobject-introspection--setuptools
+✔︎ Formula gobject-introspection (1.86.0)
+✔︎ Formula harfbuzz (14.6.0)
+✔︎ Bottle Manifest help2man (1.49.3_5)
+✔︎ Bottle help2man (1.49.3_5)
+✔︎ Formula fribidi (1.0.17)
+✔︎ Bottle Manifest nasm (3.02)
+✔︎ Bottle nasm (3.02)
+✔︎ Formula jpeg-turbo (3.2.0)
+✔︎ API Source giflib.rb
+✔︎ API Source webp.rb
+✔︎ Formula webp (1.6.0)
+✔︎ Formula libtiff (4.7.2)
+✔︎ Formula giflib (6.1.3)
+==> Pouring glpk--5.0.sonoma.bottle.tar.gz
+🍺  /usr/local/Cellar/glpk/5.0: 179 files, 3.5MB
+Error: Your Xcode (13.4) at /Applications/Xcode.app is too outdated.
+
+Please update to Xcode 26.6 (or delete it).
+Xcode can be updated from the App Store.
+
+This is a Tier 3 configuration:
+  https://docs.brew.sh/Support-Tiers#tier-3
+You can report issues with Tier 3 configurations to Homebrew/* repositories!
+  
+Read the above document before opening any issues or PRs.
+Upgrading python@3.12 has failed!
+Error: Could not symlink bin/2to3
+Target /usr/local/bin/2to3
+already exists. You may want to remove it:
+  rm '/usr/local/bin/2to3'
+
+To force the link and overwrite all conflicting files:
+  brew link --overwrite python@3.12
+
+To list all files that would be deleted:
+  brew link --overwrite python@3.12 --dry-run
+Linking /usr/local/Cellar/python@3.12/3.12.6... 
+Upgrading gcc has failed!
+Installing libxml2 has failed!
+Installing freetype has failed!
+Installing harfbuzz has failed!
+Installing fribidi has failed!
+Installing libpng has failed!
+Installing libtiff has failed!
+Installing jpeg-turbo has failed!
+Installing cairo has failed!
+`brew bundle` failed! 10 Brewfile dependencies failed to install
+Error: No such file or directory @ dir_s_rmdir - /usr/local/opt/gcc@13
+Linking /usr/local/Cellar/gcc/14.2.0... 

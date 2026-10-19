@@ -1,0 +1,4 @@
+Package: analysis.env
+Title: Analysis environment
+Version: 0.1.0
+Imports: tidyverse, readxl, openxlsx, igraph, ggraph, tidygraph, rlist, ape, matrixStats, gridExtra, patchwork, geiger, reticulate, wTO, gplots, RColorBrewer, DescTools, msigdbr, ggridges, svglite, wBoot, boot, rstatix, effectsize, broom, ggpubr, cowplot, ggrepel, circlize, dendsort, philentropy, mixtools, assertthat, plyr, jsonlite, remotes, BiocManager, renv, stringr, dplyr, knitr, rmarkdown, ComplexHeatmap, fgsea, BiocParallel, clusterProfiler, Seurat, SeuratObject, harmony, lme4, emmeans, pheatmap, umap, Rtsne, uwot, irlba, glmnet, mclust, dbscan, FactoMineR, factoextra, vegan, Matrix, data.table, pROC, corrplot, Hmisc, ggbeeswarm, viridis, SingleCellExperiment, scran, scater, scuttle, limma, edgeR, DESeq2, GSVA, GSEABase, AUCell, batchelor, bluster, decoupleR, dittoSeq, MAST, sva, org.Hs.eg.db

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(/<project>/JCI_data/**)",
+      "Edit(/<project>/JCI_data/**)",
+      "Write(/<project>/JCI_data/**)",
+      "Read(/<project>/reference/**)",
+      "Edit(/<project>/reference/**)",
+      "Write(/<project>/reference/**)",
+      "Read(/<project>/SETUP.md)",
+      "Edit(/<project>/SETUP.md)",
+      "Write(/<project>/SETUP.md)",
+      "Read(/<project>/*.docx)",
+      "Edit(/<project>/*.docx)",
+      "Write(/<project>/*.docx)",
+      "Read(/~/.claude/projects/**)",
+      "Edit(/~/.claude/projects/**)",
+      "Write(/~/.claude/projects/**)",
+      "Read(/~/.claude/plans/**)",
+      "Edit(/~/.claude/plans/**)",
+      "Write(/~/.claude/plans/**)"
+    ]
+  }
+}

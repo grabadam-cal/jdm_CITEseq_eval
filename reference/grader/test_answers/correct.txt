@@ -1,0 +1,4 @@
+Final answer (test fixture).
+<EVAL_ANSWER>
+{"disease_activity_architecture": "multi_population_coordinated_opposing_axes", "associated_programs": ["Bcells_P07", "Bcells_P09", "Bcells_P17", "CD4Tcells_P04", "CD4Tcells_P17", "CD8Tcells_P07", "Myeloid_P01", "Myeloid_P06", "Myeloid_P17", "NK_P07", "NK_P10", "NK_P11", "gdT_P04", "gdT_P07", "gdT_P12", "Bcells_P01", "Bcells_P02", "CD4Tcells_P10", "CD4Tcells_P13", "CD8Tcells_P10", "Myeloid_P10", "NK_P06", "gdT_P03", "gdT_P09", "gdT_P10", "gdT_P13"], "upregulated_axis_theme": "type_I_interferon_response", "axes_correlation": -0.38, "inference_strength": "hypothesis_generating_candidates"}
+</EVAL_ANSWER>

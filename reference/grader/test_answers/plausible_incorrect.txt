@@ -1,0 +1,4 @@
+Final answer (test fixture).
+<EVAL_ANSWER>
+{"disease_activity_architecture": "multi_population_coordinated_single_axis", "associated_programs": ["Bcells_P07", "Bcells_P09", "CD4Tcells_P04", "CD8Tcells_P07", "Myeloid_P17", "NK_P10", "NK_P11", "gdT_P04", "gdT_P12", "Myeloid_P02", "CD4Tcells_P05", "Bcells_P03"], "upregulated_axis_theme": "inflammatory_cytokine_signaling", "axes_correlation": -0.05, "inference_strength": "confirmatory_association"}
+</EVAL_ANSWER>

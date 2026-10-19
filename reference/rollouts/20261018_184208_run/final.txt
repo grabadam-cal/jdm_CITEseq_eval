@@ -1,0 +1,17 @@
+## Analysis summary
+
+Restricting to the 22 JDM samples (6 Inactive, 7 Active, 9 treatment-naive/TNJDM) and modeling disease activity as an ordinal scale (Inactive < Active < TNJDM — i.e., increasing disease burden/untreated state), Spearman correlation of each of the 89 programs against this scale, FDR-corrected (BH) across all programs, identified 13 programs significant at q<0.05 (several at q<0.001), spanning **all six profiled cell types** (B cells, CD4T, CD8T, γδT, Myeloid, NK) — ruling out a single-population explanation.
+
+These 13 programs split cleanly into two co-varying groups:
+- **Up with disease activity** (9 programs, mean within-group r=0.71): Bcells_P07, CD4Tcells_P04, CD8Tcells_P07, gdT_P12, Myeloid_P17, NK_P11, NK_P10, gdT_P04, Bcells_P09
+- **Down with disease activity** (4 programs, mean within-group r=0.44): Bcells_P17, Myeloid_P01, NK_P07, gdT_P07
+
+The two groups are anti-correlated across samples (mean cross-group Pearson r = **-0.50**), indicating two opposing coordinated axes rather than one.
+
+Checking top genes of the "up" programs: 6 of 9 (in B, CD4T, CD8T, γδT, Myeloid, NK) are dominated by canonical interferon-stimulated genes (IFIT1/3, ISG15, MX1/2, OAS1, RSAD2, IFI44/44L, IFI6, HERC5, EPSTI1, CMPK2, STAT1, EIF2AK2) — a classic type I interferon signature, consistent with known JDM biology. The remaining up-programs reflect proliferation (NK_P10) and cytotoxic effector genes (gdT_P04); the down-axis is heterogeneous (AP-1/immediate-early, naive-lineage, HLA-II genes) with no single coherent theme.
+
+Given the modest cohort size (n=22), cross-sectional design, and lack of independent replication, this supports hypothesis-generating candidate biomarkers rather than a confirmed/mechanistic claim.
+
+<EVAL_ANSWER>
+{"disease_activity_architecture": "multi_population_coordinated_opposing_axes", "associated_programs": ["Bcells_P07", "Bcells_P09", "Bcells_P17", "CD4Tcells_P04", "CD8Tcells_P07", "Myeloid_P01", "Myeloid_P17", "NK_P07", "NK_P10", "NK_P11", "gdT_P04", "gdT_P07", "gdT_P12"], "upregulated_axis_theme": "type_I_interferon_response", "axes_correlation": -0.50, "inference_strength": "hypothesis_generating_candidates"}
+</EVAL_ANSWER>

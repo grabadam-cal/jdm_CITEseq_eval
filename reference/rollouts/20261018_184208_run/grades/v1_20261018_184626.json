@@ -1,0 +1,57 @@
+{
+  "grading_version": "v1",
+  "graded_at": "20261018_184626",
+  "reference": "<project>/reference/rollouts/20261018_184208_run/snapshot/grader/reference_answer.json",
+  "reference_sha256": "330e9980462eb9f154858238a35229b23af61db2c59a72c3d7f0f2f9809734c7",
+  "total": 5.0,
+  "max": 6.0,
+  "fraction": 0.8333,
+  "hard_fail": [],
+  "unexpected_fields": [],
+  "fields": {
+    "disease_activity_architecture": {
+      "score": 2.0,
+      "max": 2.0,
+      "note": "match",
+      "given": "multi_population_coordinated_opposing_axes"
+    },
+    "associated_programs": {
+      "score": 0.0,
+      "max": 1.0,
+      "note": "core_recall=0.50 precision=1.00 n=13",
+      "given": [
+        "Bcells_P07",
+        "Bcells_P09",
+        "Bcells_P17",
+        "CD4Tcells_P04",
+        "CD8Tcells_P07",
+        "Myeloid_P01",
+        "Myeloid_P17",
+        "NK_P07",
+        "NK_P10",
+        "NK_P11",
+        "gdT_P04",
+        "gdT_P07",
+        "gdT_P12"
+      ]
+    },
+    "upregulated_axis_theme": {
+      "score": 1.0,
+      "max": 1.0,
+      "note": "match",
+      "given": "type_I_interferon_response"
+    },
+    "axes_correlation": {
+      "score": 1.0,
+      "max": 1.0,
+      "note": "within tolerance",
+      "given": -0.5
+    },
+    "inference_strength": {
+      "score": 1.0,
+      "max": 1.0,
+      "note": "match",
+      "given": "hypothesis_generating_candidates"
+    }
+  }
+}

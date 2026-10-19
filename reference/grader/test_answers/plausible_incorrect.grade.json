@@ -1,0 +1,52 @@
+{
+  "total": 1.5,
+  "max": 6.0,
+  "fraction": 0.25,
+  "hard_fail": [],
+  "unexpected_fields": [],
+  "fields": {
+    "disease_activity_architecture": {
+      "score": 1.0,
+      "max": 2.0,
+      "note": "partial (expected 'multi_population_coordinated_opposing_axes')",
+      "given": "multi_population_coordinated_single_axis"
+    },
+    "associated_programs": {
+      "score": 0.0,
+      "max": 1.0,
+      "note": "core_recall=0.35 precision=0.75 n=12",
+      "given": [
+        "Bcells_P07",
+        "Bcells_P09",
+        "CD4Tcells_P04",
+        "CD8Tcells_P07",
+        "Myeloid_P17",
+        "NK_P10",
+        "NK_P11",
+        "gdT_P04",
+        "gdT_P12",
+        "Myeloid_P02",
+        "CD4Tcells_P05",
+        "Bcells_P03"
+      ]
+    },
+    "upregulated_axis_theme": {
+      "score": 0.25,
+      "max": 1.0,
+      "note": "partial (expected 'type_I_interferon_response')",
+      "given": "inflammatory_cytokine_signaling"
+    },
+    "axes_correlation": {
+      "score": 0.0,
+      "max": 1.0,
+      "note": "-0.05 vs -0.41 (tol 0.2)",
+      "given": -0.05
+    },
+    "inference_strength": {
+      "score": 0.25,
+      "max": 1.0,
+      "note": "partial (expected 'hypothesis_generating_candidates')",
+      "given": "confirmatory_association"
+    }
+  }
+}

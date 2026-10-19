@@ -1,0 +1,69 @@
+{
+  "run": "20261018_184208_run",
+  "session_id": "b52e5f3f-eaec-464c-8189-9e8dfa752294",
+  "claude_cli": "2.1.292 (Claude Code)",
+  "model": "claude-sonnet-5",
+  "permission_mode": "bypassPermissions",
+  "exit_status": 0,
+  "num_turns": 20,
+  "duration_ms": 255520,
+  "total_cost_usd": 0.4899125999999999,
+  "usage": {
+    "input_tokens": 32,
+    "cache_creation_input_tokens": 48496,
+    "cache_read_input_tokens": 720593,
+    "output_tokens": 22449,
+    "output_tokens_details": {
+      "thinking_tokens": 14753
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 48496
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1011,
+        "cache_read_input_tokens": 65660,
+        "cache_creation_input_tokens": 1865,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 1865,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "n_tool_calls": 19,
+  "autocompact": "200k",
+  "n_compactions": 0,
+  "is_error": false,
+  "stop_reason": "success",
+  "score": 5.0,
+  "max": 6.0,
+  "hard_fail": [],
+  "out_of_scope_access": 0,
+  "memory_files_quarantined_before_run": 0,
+  "memory_files_written_during_run": 0,
+  "input_sha256": {
+    "eval/task.txt": "f0446fde1644c131f7867aba468a0ff781b62779897b3d4546017cbd211911e5",
+    "eval/eval_answer.json": "efd6bcd511393ca1a2d69b62912276c46c431033733385fbbd9b63d227947d22",
+    "eval/data/program_gene_scores_Bcells.csv": "08a053a623e32468c4e22cee7ee5e9b9961bd908d62f9f56cc5e5ca3c9b45a9e",
+    "eval/data/program_gene_scores_CD4Tcells.csv": "0202de4ab4bc6a4dbb407497e5fe08cd4fd344f0294b0c3b2f8580d9bc47b578",
+    "eval/data/program_gene_scores_CD8Tcells.csv": "10e93f89acba2f662f72ff2079d03b9798e3459687a3b22182d67b3aa36a9e1b",
+    "eval/data/program_gene_scores_Myeloid.csv": "502c3feef82c52eb615cda7c2ebc796d7091fe33174a77c0b9cfc09045645d21",
+    "eval/data/program_gene_scores_NK.csv": "0a8300d5845417bb1217df32de9010f8dec36e45decebc28b386ed50f4ee9485",
+    "eval/data/program_gene_scores_gdT.csv": "0895d5a2cf5ba722ccc232469d599a09acecec8ceed1cd96f1f43bb5e6f3abca",
+    "eval/data/sample_metadata.csv": "c903ff7395b7ec40c83d9a7f741d031abe7048d00816ee2a8fc7c3d4c5358424",
+    "eval/data/sample_program_scores.csv": "f89d4ed6b6a91df086645d478b473a1a11f0679dd5babc62799af5f175e98705",
+    "eval/data/vocabulary.json": "36d04895ceb7a6071be4ba1e5fa475f8ab00528613e73d78cf48e26739c8f900"
+  }
+}

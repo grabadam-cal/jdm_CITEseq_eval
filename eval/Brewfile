@@ -1,0 +1,21 @@
+# analysis-env — system layer.
+# Install/verify:  brew bundle --file=Brewfile --no-upgrade  |  brew bundle check --file=Brewfile --no-upgrade
+#
+# R is NOT installed here: the project uses the CRAN R 4.2.3 framework at /Library/Frameworks/R.framework.
+
+brew "python@3.12"
+brew "pkgconf"
+brew "gcc"
+brew "gmp"
+brew "glpk"
+
+# Optional libs for building R packages from source. Not installable on this Mac (Homebrew Tier 3:
+# no bottles; source builds need Xcode >= 26.6). Not needed: R packages are pre-built.
+# brew "libxml2"
+# brew "freetype"
+# brew "harfbuzz"
+# brew "fribidi"
+# brew "libpng"
+# brew "libtiff"
+# brew "jpeg-turbo"
+# brew "cairo"

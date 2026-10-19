@@ -1,0 +1,25 @@
+# analysis-env Python layer (.venv). Exact pins: env/requirements.lock.txt
+numpy
+pandas
+scipy
+statsmodels
+matplotlib
+seaborn
+networkx
+scikit-learn
+openpyxl
+xlrd
+igraph
+leidenalg
+jupyterlab
+ipykernel
+scanpy
+numba==0.62.1      # last release with macOS x86_64 cp312 wheels
+llvmlite==0.45.1   # idem
+anndata
+decoupler
+pydeseq2
+umap-learn
+harmonypy
+pingouin
+scikit-posthocs

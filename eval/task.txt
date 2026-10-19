@@ -1,0 +1,20 @@
+Experimental context. CITE-seq of 27 PBMC samples from a cross-longitudinal pediatric cohort (n JDM patients = 15, n HCs = 5). Cells were assigned to 6 major immune cell types. Within each cell type, gene expression programs were derived from the single-cell RNA data.
+
+Input files (in data/):
+- sample_program_scores.csv: per-sample score for each gene expression program (columns <CellType>_P<nn>).
+- sample_metadata.csv: sample labels, disease activity group (DA_group) and disease vs healthy status (case_ctrl).
+- program_gene_scores_<CellType>.csv (Bcells, CD4Tcells, CD8Tcells, gdT, Myeloid, NK): per-gene score for each of that cell type's programs (columns P<nn>).
+- vocabulary.json: controlled labels for every categorical answer field, with per-field answer conventions.
+
+Task.
+Is disease activity in JDM associated with changes in a single immune cell population, or with coordinated changes across populations? Characterize the specific biological activity programs involved and quantify the strength and directionality of their associations with disease activity.
+
+An R + Python analysis environment is pre-installed and already active in this directory (see README.md); use it rather than installing packages or rebuilding it.
+
+Use vocabulary.json for all controlled labels and per-field answer semantics.
+
+Return EXACTLY the JSON object specified in eval_answer.json (same keys; replace every placeholder):
+
+<EVAL_ANSWER>
+{"disease_activity_architecture": "<token>", "associated_programs": ["<program id>", "..."], "upregulated_axis_theme": "<token>", "axes_correlation": <number|null>, "inference_strength": "<token>"}
+</EVAL_ANSWER>
