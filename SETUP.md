@@ -269,24 +269,37 @@ Run folder (nothing is ever overwritten; re-grades add files):
 | `quarantined_memory_*/` | only if auto-memory existed before, or was written during, the run |
 
 **Containment (design decision).** The agent must not see answers, the paper or this design discussion. It needs
-Bash and runs unattended (`bypassPermissions`), so containment has four layers:
+Bash and runs unattended (`bypassPermissions`), so containment has five layers:
 1. **Scope:** working directory `eval/`, and the prompt names only `eval/` files. No `CLAUDE.md` loads.
-2. **Deny rules** (`rollout_settings.json`, 18 rules): Read, Edit and Write are denied for `JCI_data/`, `reference/`,
-   `SETUP.md`, the `.docx`, `~/.claude/projects/**` (transcripts, including this design conversation) and
+2. **Deny rules** (`rollout_settings.json`, 21 rules): Read, Edit and Write are denied for `JCI_data/`, `reference/`,
+   `SETUP.md`, the `.docx`, `.git/`, `~/.claude/projects/**` (transcripts, including this design conversation) and
    `~/.claude/plans/**`. The file is kept in `reference/`, not `eval/.claude/`, so the deny list itself doesn't point
    to the answers.
 3. **Memory quarantine:** auto-memory for `eval/` (`~/.claude/projects/<eval>/memory/`) is moved into the run folder
    before and after each run. It's never deleted; memory written during a run is flagged in `audit.txt`.
-4. **Audit (backstop):** deny rules don't cover Bash (`cat ../SETUP.md`). `audit.txt` flags tool calls matching the
-   paper, the reference files, `../` and `.claude/projects`. **A flagged rollout is not scored as clean.**
+4. **Git hidden:** the project repo's history holds `SETUP.md` and every reference version. `run_rollout.sh` sets
+   `GIT_CEILING_DIRECTORIES=<project root>`, so git started in `eval/` finds no repo.
+5. **Audit (backstop):** deny rules don't cover Bash (`cat ../SETUP.md`, `git -C .. show HEAD:SETUP.md`). `audit.txt`
+   flags tool calls matching the paper, the reference files, `..` paths, `.git`, any `git` command and
+   `.claude/projects`. **A flagged rollout is not scored as clean.**
 
 Rejected: `--restricted` (removes Bash, so the task is impossible); `--bare` (needs `ANTHROPIC_API_KEY`); moving files
 outside the project.
 
 **Verified:**
-- **Deny rules:** two Haiku probe runs ($0.05). Read of `SETUP.md`, `reference_answer.json`, `JCI_data/`, the
-  transcript, and Read/Edit of `grade.py` were all denied; `eval/` files were allowed. Grep and Glob don't exist in
-  CLI 2.1.292, so searching goes through Bash, which the audit covers.
+- **Pre-flight containment test** (run before rollouts whenever the project layout changes; last run 2026-10-19,
+  after adding git and `reference/grader/versions/`). Haiku, same flags, settings and env as `run_rollout.sh`,
+  started in `eval/`, attempts each access once ($0.03):
+
+  | # | Attempt | Result |
+  |---|---|---|
+  | 1 | Read `eval/task.txt` | allowed |
+  | 2–8 | Read `SETUP.md`, `reference/grader/versions/reference_answer_v2.json`, `reference/grader/reference_answer.json`, `JCI_data/*.pdf`, `.git/config`, a rollout `trace.md`, this project's Claude memory | denied |
+  | 9 | Write `reference/probe.txt` | denied (no file created) |
+  | 10 | Bash `git log` | no repo found (ceiling) |
+  | 11 | Bash `git -C .. show HEAD:SETUP.md` | **allowed**: Bash gap, caught by audit only |
+
+  Grep and Glob don't exist in CLI 2.1.292, so searching goes through Bash, which the audit covers.
 - **Pipeline:** stub-`claude` runs (no API calls). A concurrent start is refused; two runs get separate folders;
   `eval/` is byte-identical after the runs; a re-grade under another reference adds `grades/<version>_*.json`
   and leaves `grade.json` unchanged; memory is quarantined before and after the run and flagged.

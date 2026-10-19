@@ -89,6 +89,8 @@ cp "$EVAL/task.txt" "$EVAL/eval_answer.json" "$EVAL/README.md" "$EVAL/data/vocab
 cp "$REF" "$RUN/snapshot/grader/reference_answer.json"
 cp "$ROOT/reference/grader/grade.py" "$ROOT/reference/grader/build_reference.py" "$RUN/snapshot/grader/"
 
+# git: GIT_CEILING_DIRECTORIES (below) stops git in eval/ from finding the project repo (history holds SETUP.md
+# and every reference answer); .git/ is also denied and any git command is flagged in audit.txt.
 # deny rules (Read/Edit/Write) for everything outside eval/ that could leak answers; kept here, not in eval/,
 # so the agent can't read the list of where the answers are. Bash is not covered -> audit.txt is the backstop.
 SETTINGS="$ROOT/reference/rollouts/rollout_settings.json"
@@ -105,7 +107,7 @@ set +e
 # Ctrl-C stops the agent but still runs the cleanup below (restore eval/, save outputs, grade the partial trace)
 trap 'echo; echo "interrupted: stopping agent, restoring eval/ and saving the partial run"' INT
 # full trace -> trace.jsonl; readable live feed -> this terminal (watching only)
-( cd "$EVAL" && source env/activate.sh >/dev/null && claude "${args[@]}" < /dev/null ) 2> "$RUN/stderr.log" \
+( cd "$EVAL" && source env/activate.sh >/dev/null && GIT_CEILING_DIRECTORIES="$ROOT" claude "${args[@]}" < /dev/null ) 2> "$RUN/stderr.log" \
   | tee "$RUN/trace.jsonl" | "$EVAL/.venv/bin/python" -u -I "$ROOT/reference/rollouts/live_view.py"
 status=${PIPESTATUS[0]}
 trap - INT

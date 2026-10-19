@@ -27,7 +27,7 @@ MAX_RESULT_CHARS = 4000
 # the paper's code, and Claude Code transcripts/memory (which contain the design discussion)
 FORBIDDEN = [r"JCI_data", r"reference/", r"SETUP\.md", r"Takehome", r"Rabadam", r"jci\.insight", r"176963",
              r"DECIPHER", r"grabadam", r"\.claude/projects", r"eval_id_map", r"reference_answer",
-             r"LatchBio_Assessment_2026/(?!eval)", r"(^|[\s'\"=])\.\./"]
+             r"LatchBio_Assessment_2026/(?!eval)", r"(^|[\s'\"=])\.\.(/|\s|$)", r"\.git\b", r"(^|[\s;&|(])git\s"]
 
 
 def events(path):

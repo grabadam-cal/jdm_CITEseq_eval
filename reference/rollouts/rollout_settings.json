@@ -18,7 +18,11 @@
       "Write(/~/.claude/projects/**)",
       "Read(/~/.claude/plans/**)",
       "Edit(/~/.claude/plans/**)",
-      "Write(/~/.claude/plans/**)"
+      "Write(/~/.claude/plans/**)",
+      "Read(/<project>/.git/**)",
+      "Edit(/<project>/.git/**)",
+      "Write(/<project>/.git/**)",
+      "Bash(git:*)"
     ]
   }
 }
