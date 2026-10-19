@@ -307,15 +307,13 @@ v1 and rollout 1 are frozen at tag `v1-rollout1`.
 - **HC-dependent programs:** only 3 (CD4Tcells_P10, P13, P17; 4-group p ≤ 0.044, patients-only p ≥ 0.12).
 - **The pre-rollout v2 (core = BH 15, optional = nominal 11) would score rollout 1 6/6** (BH-core recall 0.87). Dropped.
 
-**Decision: revise the grader, not the task.** Both are capability failures; the task already provides DA_group with an
-HC level and the gene scores. Stating the method in the prompt would leak the analysis. The only task change is one
-output field. Known ambiguity, kept: "disease activity *in JDM*" could suggest patients-only; the answer convention
-("associated with DA_group") resolves it.
+**Decision: revise the grader, not the task.** Both are capability failures; the inputs already allow the correct
+analysis, and stating the method in the prompt would leak it.
 
-**v2 changes** (`GRADING_VERSION = "v2"`, max 6 → 8, hard fails unchanged):
-1. **New field `downregulated_axis_theme`, categorical, 2 pts.** Reference `ribosome_translation_protein_targeting`;
-   partial `stress_response_cell_death` 0.25 (Module 5). New token added to both theme vocabularies; answer
-   convention mirrors the up-axis one. `build_reference.py` asserts the reference against sdt3 and Fig 5B.
+**v2 changes** (`GRADING_VERSION = "v2"`):
+1. **New field `downregulated_axis_theme`** (scoring in the table below). Partial token `stress_response_cell_death`
+   = Module 5; it is added to both theme vocabularies. `build_reference.py` asserts the reference against sdt3 and
+   Fig 5B.
    - **Weight 2 (vs 1 for the up-axis theme):** weight follows what the field discriminates. The up-axis theme is
      answerable from top genes; the down-axis theme requires program-level GSEA then module aggregation. Not weighted
      by module count (associated programs split 14 up / 12 down).
@@ -325,15 +323,17 @@ output field. Known ambiguity, kept: "disease activity *in JDM*" could suggest p
    HC-dependent programs (lists stored in `reference_answer.json`). HC exclusion is reported, not scored: 3 borderline
    programs are too few to score robustly.
 
-| Field | v1 | v2 |
-|---|---|---|
-| `disease_activity_architecture` | 2 | 2 |
-| `associated_programs` | 1 | 1 |
-| `upregulated_axis_theme` | 1 | 1 |
-| `downregulated_axis_theme` | – | 2 |
-| `axes_correlation` | 1 | 1 |
-| `inference_strength` | 1 | 1 |
-| **max** | 6 | 8 |
+| Field | v1 pts | v2 pts | Full credit | Partial (points in v2) | 0 |
+|---|---|---|---|---|---|
+| `disease_activity_architecture` | 2 | 2 | `multi_population_coordinated_opposing_axes` | `…coordinated_single_axis` 1.0; `multi_population_independent` 0.25 | other tokens |
+| `associated_programs` | 1 | 1 | recall ≥ 0.8 and precision ≥ 0.8 vs the 26 nominal programs | none (all-or-nothing) | either below 0.8 |
+| `upregulated_axis_theme` | 1 | 1 | `type_I_interferon_response` | `inflammatory_cytokine_signaling` 0.25 | other tokens |
+| `downregulated_axis_theme` | – | 2 | `ribosome_translation_protein_targeting` | `stress_response_cell_death` 0.5 | other tokens, incl. `no_coherent_theme` |
+| `axes_correlation` | 1 | 1 | within ±0.20 of −0.41 and negative | none | outside, positive, or `null` |
+| `inference_strength` | 1 | 1 | `hypothesis_generating_candidates` | `confirmatory_association` 0.25 | other tokens |
+| **max** | 6 | 8 | | | |
+
+Hard fails (total → 0, unchanged): `single_population_dominant`; `mechanistic_driver_identified`.
 
 **Expected scores:** `correct` 8/8; `plausible_incorrect` 1.5/8 (19%, with `no_coherent_theme`); `correct_strict` 7/8;
 `hard_fail` 0; rollout 1 regraded **5/8 (63%)**, diagnostics M1 9/11, M2 3/7, M5 1/4, M4 0/2, M6 0/2; up 9/14,
