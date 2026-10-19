@@ -129,6 +129,8 @@ def main():
            "answer": answer, "rules": rules, "hard_fail": hard_fail, "diagnostics": diagnostics,
            "provenance": provenance}
     OUT.write_text(json.dumps(ref, indent=2) + "\n")
+    # frozen per-version copy, selected by GRADER_VERSION in run_rollout.sh
+    (OUT.parent / "versions" / f"reference_answer_{GRADING_VERSION}.json").write_text(json.dumps(ref, indent=2) + "\n")
     print(json.dumps(answer, indent=1))
     print("\nprovenance:", json.dumps(provenance, indent=1))
 

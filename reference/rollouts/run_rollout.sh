@@ -31,6 +31,7 @@ set -euo pipefail
 # ---- rollout config (edit here; recorded in each run's meta.json) ----
 MODEL="claude-sonnet-5"     # agent model (Sonnet 5.0; verified ID)
 MAX_CONTEXT="200k"          # auto-compact window for --autocompact (auto, or 100k-1M): context is compacted at this size
+GRADER_VERSION="v2"         # grade with reference/grader/versions/reference_answer_<version>.json (must match eval/eval_answer.json)
 # ----------------------------------------------------------------------
 
 # validate config before creating anything
@@ -39,6 +40,16 @@ if [[ ! "$MAX_CONTEXT" =~ ^(auto|[0-9]+[kKmM]?)$ ]]; then
 fi
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 EVAL="$ROOT/eval"
+REF="$ROOT/reference/grader/versions/reference_answer_${GRADER_VERSION}.json"
+[[ -f "$REF" ]] || { echo "no reference for GRADER_VERSION=$GRADER_VERSION ($REF)" >&2; exit 1; }
+# the grader's fields must be exactly the answer fields the agent is asked for
+"$EVAL/.venv/bin/python" -I - "$REF" "$EVAL/eval_answer.json" <<'PY' || exit 1
+import json, sys
+ref, ans = (json.load(open(f)) for f in sys.argv[1:])
+r, a = list(ref["rules"]), list(ans["answer"])
+if r != a:
+    sys.exit(f"GRADER_VERSION fields {r} != eval/eval_answer.json fields {a}")
+PY
 LABEL="${1:-run}"
 # one rollout at a time: all runs share eval/ (snapshot -> run -> restore)
 LOCK="$ROOT/reference/rollouts/.lock"
@@ -75,8 +86,8 @@ cp "$EVAL/task.txt" "$RUN/prompt.txt"
 # frozen copy of what this run was given and graded with, so later edits/revisions never change its record
 mkdir -p "$RUN/snapshot/eval" "$RUN/snapshot/grader"
 cp "$EVAL/task.txt" "$EVAL/eval_answer.json" "$EVAL/README.md" "$EVAL/data/vocabulary.json" "$RUN/snapshot/eval/"
-cp "$ROOT/reference/grader/reference_answer.json" "$ROOT/reference/grader/grade.py" \
-   "$ROOT/reference/grader/build_reference.py" "$RUN/snapshot/grader/"
+cp "$REF" "$RUN/snapshot/grader/reference_answer.json"
+cp "$ROOT/reference/grader/grade.py" "$ROOT/reference/grader/build_reference.py" "$RUN/snapshot/grader/"
 
 # deny rules (Read/Edit/Write) for everything outside eval/ that could leak answers; kept here, not in eval/,
 # so the agent can't read the list of where the answers are. Bash is not covered -> audit.txt is the backstop.
@@ -88,7 +99,7 @@ args+=(--model "$MODEL")
 args+=(--autocompact "$MAX_CONTEXT")
 
 cp "$SETTINGS" "$RUN/settings.json"
-echo "rollout -> $RUN (session $SESSION, permission mode $PERM, model $MODEL, autocompact $MAX_CONTEXT)"
+echo "rollout -> $RUN (session $SESSION, permission mode $PERM, model $MODEL, autocompact $MAX_CONTEXT, grader $GRADER_VERSION)"
 start=$(date +%s)
 set +e
 # Ctrl-C stops the agent but still runs the cleanup below (restore eval/, save outputs, grade the partial trace)

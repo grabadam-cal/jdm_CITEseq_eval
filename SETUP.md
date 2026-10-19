@@ -248,8 +248,10 @@ total = 0 if any hard fail else sum(scores)
 MAX_BUDGET_USD=<cap> bash reference/rollouts/run_rollout.sh <label>        # model + context are set in the script
 eval/.venv/bin/python -I reference/rollouts/render_trace.py reference/rollouts/<run> [--reference PATH]   # re-grade
 ```
-Config at the top of `run_rollout.sh`: `MODEL="claude-sonnet-5"` (Sonnet 5.0) and `MAX_CONTEXT="200k"` (auto-compact
-window, `--autocompact`). `meta.json` records the resolved model, the window and `n_compactions`. Recaps come
+Config at the top of `run_rollout.sh`: `MODEL="claude-sonnet-5"` (Sonnet 5.0), `MAX_CONTEXT="200k"` (auto-compact
+window, `--autocompact`) and `GRADER_VERSION="v2"`. The script grades with `reference/grader/versions/reference_answer_<version>.json`
+(frozen per version; `build_reference.py` writes the current one) and refuses to start if that grader's fields differ
+from `eval/eval_answer.json`. `meta.json` records the resolved model, the window and `n_compactions`. Recaps come
 from the session transcript, since the stream may carry only a compaction marker (shown live as a marker line). Ctrl-C stops the agent but still restores `eval/` and saves
 and grades the partial run.
 
